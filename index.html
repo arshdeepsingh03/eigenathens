@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A simple, welcoming website." />
+    <title>EigenAthens — Make room for what matters</title>
+    <style>
+      :root { --ink:#172018; --muted:#657067; --cream:#f7f5ef; --lime:#cbea75; --line:#dedfd8; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:var(--cream); font:16px/1.5 Arial, Helvetica, sans-serif; }
+      .wrap { width:min(1120px, calc(100% - 40px)); margin:auto; }
+      nav { display:flex; align-items:center; justify-content:space-between; padding:24px 0; }
+      .brand { font-weight:800; letter-spacing:-.06em; font-size:1.35rem; text-decoration:none; color:inherit; }
+      .links { display:flex; align-items:center; gap:28px; }
+      .links a { color:var(--ink); text-decoration:none; font-size:.92rem; }
+      .button { background:var(--ink); color:white!important; padding:11px 18px; border-radius:999px; font-weight:700; }
+      main { min-height:calc(100vh - 82px); display:grid; place-items:center; padding:56px 0 72px; }
+      .hero { display:grid; grid-template-columns:1.08fr .92fr; align-items:center; gap:64px; }
+      .eyebrow { display:inline-flex; gap:8px; align-items:center; color:var(--muted); font-size:.83rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+      .eyebrow::before { content:""; width:9px; height:9px; border-radius:50%; background:#76a52b; }
+      h1 { margin:18px 0; font:700 clamp(3.6rem, 8vw, 6.7rem)/.94 Georgia, 'Times New Roman', serif; letter-spacing:-.075em; }
+      .lede { max-width:510px; margin:0 0 28px; color:var(--muted); font-size:1.12rem; }
+      .actions { display:flex; gap:13px; flex-wrap:wrap; }
+      .actions a { text-decoration:none; border-radius:999px; padding:13px 21px; font-weight:700; }
+      .primary { color:var(--ink); background:var(--lime); }
+      .secondary { color:var(--ink); border:1px solid var(--line); }
+      .note { margin-top:22px; color:var(--muted); font-size:.86rem; }
+      .art { position:relative; height:450px; border-radius:28px; overflow:hidden; background:#ddedb1; }
+      .sun { position:absolute; width:220px; height:220px; top:44px; right:40px; border-radius:50%; background:#f8f4d7; }
+      .hill { position:absolute; border-radius:50% 50% 0 0; bottom:-80px; }
+      .hill.one { width:600px; height:310px; left:-145px; background:#729452; transform:rotate(11deg); }
+      .hill.two { width:530px; height:250px; right:-170px; background:#2c553c; transform:rotate(-10deg); }
+      .card { position:absolute; left:32px; top:32px; width:210px; padding:18px; border-radius:16px; background:rgba(255,255,255,.88); backdrop-filter:blur(8px); }
+      .card strong { display:block; font:700 2rem/1 Georgia, serif; letter-spacing:-.08em; }
+      .card span { color:var(--muted); font-size:.85rem; }
+      footer { border-top:1px solid var(--line); padding:18px 0 24px; color:var(--muted); font-size:.85rem; }
+      @media (max-width:720px) { .links a:not(.button) { display:none; } .hero { grid-template-columns:1fr; gap:42px; } .art { height:330px; } h1 { font-size:4rem; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav>
+        <a class="brand" href="#">EigenAthens</a>
+        <div class="links"><a href="#about">About</a><a href="#journal">Journal</a><a class="button" href="mailto:hello@example.com">Say hello</a></div>
+      </nav>
+      <main>
+        <section class="hero" id="about">
+          <div>
+            <span class="eyebrow">A little more room</span>
+            <h1>Make room for what matters.</h1>
+            <p class="lede">Thoughtful tools and gentle prompts for making a life that feels like your own.</p>
+            <div class="actions"><a class="primary" href="#journal">Explore the journal</a><a class="secondary" href="mailto:hello@example.com">Work with us →</a></div>
+            <p class="note">No noise. Just useful ideas, sent occasionally.</p>
+          </div>
+          <div class="art" role="img" aria-label="An abstract green landscape at sunrise"><div class="sun"></div><div class="card"><strong>01</strong><span>Start where you are.</span></div><div class="hill one"></div><div class="hill two"></div></div>
+        </section>
+      </main>
+      <footer id="journal">© 2026 EigenAthens. Made with intention.</footer>
+    </div>
+  </body>
+</html>
