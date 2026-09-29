@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mathematics Talk</title>
+
+  <style>
+
+    /* ---------- General page ---------- */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eeeeea;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #171717;
+
+      display: flex;
+      justify-content: center;
+
+      padding: 40px;
+    }
+
+
+    /* ---------- The poster itself ---------- */
+
+    .poster {
+      width: 800px;
+      min-height: 1050px;
+
+      background: #f7f2e8;
+
+      border: 1px solid #ccc;
+      padding: 65px;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+
+    /* ---------- Small heading at top ---------- */
+
+    .series {
+      font-size: 18px;
+      font-weight: bold;
+
+      text-transform: uppercase;
+      letter-spacing: 3px;
+
+      border-bottom: 2px solid #171717;
+      padding-bottom: 15px;
+    }
+
+
+    /* ---------- Main title ---------- */
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+
+      font-size: 88px;
+      line-height: 0.95;
+
+      letter-spacing: -5px;
+
+      margin: 70px 0 30px 0;
+    }
+
+
+    /* ---------- Description ---------- */
+
+    .description {
+      font-family: Georgia, "Times New Roman", serif;
+
+      font-size: 27px;
+      line-height: 1.45;
+
+      max-width: 620px;
+    }
+
+
+    /* ---------- Event information ---------- */
+
+    .details {
+      margin-top: 70px;
+
+      border-top: 1px solid #777;
+      border-bottom: 1px solid #777;
+
+      padding: 28px 0;
+
+      display: grid;
+
+      grid-template-columns: 130px 1fr;
+
+      row-gap: 15px;
+
+      font-size: 20px;
+    }
+
+
+    .label {
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+    }
+
+
+    /* ---------- Bottom of poster ---------- */
+
+    .bottom {
+      margin-top: auto;
+      padding-top: 70px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+    }
+
+
+    .free {
+      background: #171717;
+      color: white;
+
+      padding: 15px 24px;
+
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+
+    .website {
+      text-align: right;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+
+    /* ---------- Smaller screens ---------- */
+
+    @media (max-width: 850px) {
+
+      body {
+        padding: 15px;
+      }
+
+      .poster {
+        width: 100%;
+        min-height: 90vh;
+        padding: 40px;
+      }
+
+      h1 {
+        font-size: 14vw;
+      }
+
+      .description {
+        font-size: 22px;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+  <main class="poster">
+
+    <div class="series">
+      City Mathematics Talks · Lecture 1
+    </div>
+
+
+    <h1>
+      What Is<br>
+      a Number?
+    </h1>
+
+
+    <div class="description">
+      A public mathematics talk about one of the simplest
+      questions we can ask — and why answering it properly
+      leads surprisingly deep into the foundations of mathematics.
+    </div>
+
+
+    <section class="details">
+
+      <div class="label">When</div>
+      <div>Saturday, October 3 · 7:00 PM</div>
+
+      <div class="label">Where</div>
+      <div>Vancouver, BC</div>
+
+      <div class="label">Length</div>
+      <div>60 minute talk + discussion</div>
+
+      <div class="label">For</div>
+      <div>Everyone — no mathematical background required</div>
+
+    </section>
+
+
+    <div class="bottom">
+
+      <div class="free">
+        FREE ADMISSION
+      </div>
+
+      <div class="website">
+        Full details &amp; RSVP<br>
+        <strong>example.org/events</strong>
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+
+</html>

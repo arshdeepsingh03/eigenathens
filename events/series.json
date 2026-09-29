@@ -1,0 +1,18 @@
+[
+  {
+    "number": 1,
+    "short-name": "nuclear",
+    "title": "mathematics: useless knowledge of life and death significance",
+    "areas": ["Metro Vancouver", "web"],
+    "poster-general": "1-general.jpg",
+    "is-published": "yes"
+  }, 
+  {
+    "number": 2,
+    "short-name": "continuum",
+    "title": "the hardest problem in mathematics",
+    "areas": ["Metro Vancouver", "web"],
+    "poster-general": "2-general.jpg",
+    "is-published": "no"
+  }
+]

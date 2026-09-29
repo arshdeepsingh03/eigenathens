@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Mathematics Talk</title>
+
+<style>
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 50px;
+
+    background: #d9d8d2;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    display: flex;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   POSTER
+   ========================================================= */
+
+.poster {
+
+    position: relative;
+    overflow: hidden;
+
+    width: 800px;
+    min-height: 1100px;
+
+    padding: 65px;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            #d7f38b 0,
+            #d7f38b 120px,
+            transparent 121px
+        ),
+        #f8f5ec;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.22);
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   DECORATIVE GIANT CIRCLES
+   These are empty DIVs. CSS turns them into artwork.
+   ========================================================= */
+
+.circle-one {
+
+    position: absolute;
+
+    width: 390px;
+    height: 390px;
+
+    border: 2px solid #172018;
+    border-radius: 50%;
+
+    right: -190px;
+    top: 270px;
+}
+
+
+.circle-two {
+
+    position: absolute;
+
+    width: 240px;
+    height: 240px;
+
+    border-radius: 50%;
+
+    background: #264b37;
+
+    right: -100px;
+    bottom: 130px;
+}
+
+
+/* =========================================================
+   DECORATIVE GRID
+   ========================================================= */
+
+.grid {
+
+    position: absolute;
+
+    width: 230px;
+    height: 230px;
+
+    right: 40px;
+    top: 470px;
+
+    opacity: .16;
+
+    background-image:
+
+        linear-gradient(
+            #172018 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            #172018 1px,
+            transparent 1px
+        );
+
+    background-size: 20px 20px;
+}
+
+
+/* =========================================================
+   TOP
+   ========================================================= */
+
+.top {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    position: relative;
+    z-index: 2;
+}
+
+
+.series {
+
+    text-transform: uppercase;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    letter-spacing: 3px;
+}
+
+
+.number {
+
+    width: 55px;
+    height: 55px;
+
+    border: 1px solid #172018;
+    border-radius: 50%;
+
+    display: grid;
+    place-items: center;
+
+    font-family: Georgia, serif;
+    font-size: 20px;
+}
+
+
+/* =========================================================
+   LITTLE GREEN LABEL
+   ========================================================= */
+
+.eyebrow {
+
+    margin-top: 100px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    color: #597049;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
+    position: relative;
+    z-index: 2;
+}
+
+
+.eyebrow::before {
+
+    content: "";
+
+    width: 10px;
+    height: 10px;
+
+    background: #83ad37;
+
+    border-radius: 50%;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+h1 {
+
+    position: relative;
+    z-index: 2;
+
+    margin: 20px 0 30px;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 100px;
+    font-weight: normal;
+
+    line-height: .88;
+
+    letter-spacing: -7px;
+}
+
+
+h1 em {
+
+    font-weight: normal;
+    color: #6f8e46;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.description {
+
+    position: relative;
+    z-index: 2;
+
+    width: 500px;
+
+    font-family: Georgia, serif;
+
+    font-size: 24px;
+    line-height: 1.45;
+
+    color: #555d55;
+}
+
+
+/* =========================================================
+   EVENT INFORMATION
+   ========================================================= */
+
+.details {
+
+    position: relative;
+    z-index: 2;
+
+    width: 520px;
+
+    margin-top: 75px;
+
+    padding: 28px 0;
+
+    border-top: 2px solid #172018;
+    border-bottom: 2px solid #172018;
+
+    display: grid;
+
+    grid-template-columns: 110px 1fr;
+
+    row-gap: 17px;
+}
+
+
+.label {
+
+    font-size: 12px;
+    font-weight: bold;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    color: #788078;
+}
+
+
+.value {
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   BOTTOM
+   ========================================================= */
+
+.bottom {
+
+    position: relative;
+    z-index: 2;
+
+    margin-top: auto;
+    padding-top: 80px;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: end;
+}
+
+
+.free {
+
+    background: #172018;
+    color: #f8f5ec;
+
+    padding: 15px 25px;
+
+    border-radius: 100px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    letter-spacing: 1px;
+}
+
+
+.website {
+
+    text-align: right;
+
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   DECORATIVE CORNER NUMBER
+   ========================================================= */
+
+.big-number {
+
+    position: absolute;
+
+    right: 30px;
+    bottom: -80px;
+
+    font-family: Georgia, serif;
+
+    font-size: 300px;
+
+    line-height: 1;
+
+    color: rgba(23,32,24,.055);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .poster {
+
+        width: 100%;
+
+        min-height: 95vh;
+
+        padding: 40px;
+    }
+
+    h1 {
+        font-size: 15vw;
+        letter-spacing: -4px;
+    }
+
+    .description,
+    .details {
+        width: 80%;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<main class="poster">
+
+
+    <!-- These have no textual content.
+         They're simply objects for CSS to draw with. -->
+
+    <div class="circle-one"></div>
+
+    <div class="circle-two"></div>
+
+    <div class="grid"></div>
+
+    <div class="big-number">1</div>
+
+
+
+    <header class="top">
+
+        <div class="series">
+            City Mathematics Talks
+        </div>
+
+        <div class="number">
+            01
+        </div>
+
+    </header>
+
+
+
+    <div class="eyebrow">
+        A public lecture
+    </div>
+
+
+
+    <h1>
+        What Is<br>
+        a <em>Number?</em>
+    </h1>
+
+
+
+    <div class="description">
+
+        One of the simplest questions in mathematics
+        turns out to be one of the deepest.
+
+        What exactly are the objects we have been
+        calling numbers all our lives?
+
+    </div>
+
+
+
+    <section class="details">
+
+        <div class="label">When</div>
+        <div class="value">
+            Saturday · October 3 · 7:00 PM
+        </div>
+
+        <div class="label">Where</div>
+        <div class="value">
+            Vancouver, British Columbia
+        </div>
+
+        <div class="label">Length</div>
+        <div class="value">
+            60 minute lecture + discussion
+        </div>
+
+        <div class="label">Audience</div>
+        <div class="value">
+            Everyone — no background required
+        </div>
+
+    </section>
+
+
+
+    <footer class="bottom">
+
+        <div class="free">
+            FREE ADMISSION
+        </div>
+
+        <div class="website">
+            Details &amp; RSVP<br>
+            <strong>example.org/events</strong>
+        </div>
+
+    </footer>
+
+
+</main>
+
+
+</body>
+</html>

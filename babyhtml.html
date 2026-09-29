@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+<head>
+  <title>Math Talks</title>
+</head>
+
+<body>
+  <h1>Math Talks</h1>
+
+  <p>
+    Free talks about \n 
+    
+    
+    <a href="/geometry.html">geometry</a>.
+  </p>
+
+  <h2>Upcoming talks</h2>
+
+  <ul>
+    <li>Euclid</li>
+    <li>Eudoxus</li>
+    <li>Archimedes</li>
+  </ul>
+
+  <p1>Everyone is welcome.</p1>
+
+
+  <h2>Upcoming talks</h2>
+
+  <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML Input Examples</title>
+</head>
+
+<body>
+
+  <!-- A simple single-line text box -->
+  <input type="text">
+
+
+  <!-- A single-line text box with placeholder text -->
+  <input type="text" placeholder="Enter your name">
+
+
+  <!-- An email input box.
+       The browser knows this field is intended for an email address. -->
+  <input type="email" placeholder="you@example.com">
+
+
+  <!-- A simple multi-line text box -->
+  <textarea></textarea>
+
+
+  <!-- A multi-line text box with an initial visible size -->
+  <textarea rows="5" cols="40"></textarea>
+
+
+  <!-- A label connected to a text input.
+       Clicking the label also focuses the input box. -->
+  <label for="name">Name:</label>
+  <input type="text" id="name">
+
+
+  <!-- A line break -->
+  <br>
+
+
+  <!-- A label connected to an email input -->
+  <label for="email">Email:</label>
+  <input type="email" id="email">
+
+
+  <!-- Another line break -->
+  <br>
+
+
+  <!-- A label connected to a multi-line text area -->
+  <label for="message">Message:</label>
+  <textarea id="message" rows="5" cols="40"></textarea>
+
+  <!-- A basic clickable button -->
+<button>Click me</button>
+<!-- A button with an ID so JavaScript can find it -->
+<button id="submitButton">Submit</button>
+
+
+ <!--
+    GET FORM
+
+    action:
+      The URL where the browser will send the form data.
+
+    method="get":
+      Tells the browser to use an HTTP GET request.
+
+    With GET, the submitted values are normally encoded into
+    the URL as a query string.
+
+    Example:
+      If the user enters "hello",
+      the browser may request:
+
+      https://example.com/receive?message=hello
+  -->
+  <h2>GET example</h2>
+
+  <form action="https://example.com/receive" method="get">
+
+    <!--
+      type="text":
+        Creates a single-line text box.
+
+      name="message":
+        This is very important.
+        "message" becomes the name of this piece of submitted data.
+
+      If the user enters:
+        hello
+
+      then this field contributes:
+        message=hello
+    -->
+    <input
+      type="text"
+      name="message"
+      placeholder="Type something"
+    >
+
+    <!--
+      type="submit":
+        Clicking this tells the browser to submit the enclosing form.
+        No JavaScript is needed.
+    -->
+    <button type="submit">
+      Send with GET
+    </button>
+
+  </form>
+
+
+  <hr>
+
+
+  <!--
+    POST FORM
+
+    This looks almost identical to the GET form.
+
+    The difference is:
+
+      method="post"
+
+    With POST, the browser normally places the submitted form data
+    in the body of the HTTP request instead of putting it in the URL.
+  -->
+  <h2>POST example</h2>
+
+  <form action="https://example.com/receive" method="post">
+
+    <!--
+      This field will be submitted under the name "name".
+    -->
+    <input
+      type="text"
+      name="name"
+      placeholder="Your name"
+    >
+
+    <!--
+      type="email":
+        Tells the browser this field is intended to contain an email address.
+
+      name="email":
+        The submitted field name will be "email".
+    -->
+    <input
+      type="email"
+      name="email"
+      placeholder="you@example.com"
+    >
+
+    <!--
+      Clicking this causes the browser to build and send
+      an HTTP POST request to:
+
+        https://example.com/receive
+    -->
+    <button type="submit">
+      Register with POST
+    </button>
+
+
+    <form action="YOUR_GOOGLE_SCRIPT_URL" method="post">
+<!--type email forces browser built in checks for html forms. only email addrs will pass thru-->
+  <input
+    type="email"
+    name="email"
+    required
+    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+  >
+
+  <button type="submit">Register</button>
+
+</form>
+
+  </form>
+
+
+
+
+
+
+
+
+</body>
+
+</html>
+</body>
+</html>

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>EigenAthens — Free Mathematics Lecture Series</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ink: #172018;
+            --muted: #667067;
+            --paper: #f7f4eb;
+            --page: #d8d1c7;
+            --card: #fffdf7;
+            --accent: #bdda65;
+            --accent-dark: #29451f;
+            --line: #cac8bd;
+            --warning: #8b261f;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page);
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .page {
+            width: min(1050px, calc(100% - 28px));
+            margin: 36px auto 70px auto;
+            background: var(--paper);
+            border: 1px solid #bab5aa;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .masthead {
+            padding: 38px 48px 30px 48px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brand {
+            margin: 0 0 20px 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            max-width: 780px;
+            font-size: clamp(42px, 7vw, 76px);
+            line-height: 0.95;
+            letter-spacing: -0.055em;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            max-width: 720px;
+            margin: 28px 0 0 0;
+            font-size: 21px;
+            line-height: 1.55;
+        }
+
+        .free-badge {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 8px 13px;
+            background: var(--accent);
+            border: 1px solid #a6c54e;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .content {
+            padding: 40px 48px 50px 48px;
+        }
+
+        .section-title {
+            margin: 0 0 18px 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .event-summary {
+            display: grid;
+            grid-template-columns: 170px 1fr;
+            border-top: 1px solid var(--line);
+            margin-bottom: 46px;
+        }
+
+        .summary-label,
+        .summary-value {
+            padding: 11px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .summary-label {
+            padding-right: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .summary-value {
+            font-size: 17px;
+            line-height: 1.45;
+        }
+
+        .location-intro {
+            margin: 0 0 22px 0;
+            max-width: 700px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .location-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 36px;
+        }
+
+        .location-card {
+            display: block;
+            position: relative;
+            padding: 24px 24px 22px 24px;
+            background: var(--card);
+            border: 2px solid var(--line);
+            cursor: pointer;
+            transition:
+                transform 120ms ease,
+                border-color 120ms ease,
+                box-shadow 120ms ease,
+                background 120ms ease;
+        }
+
+        .location-card:hover {
+            transform: translateY(-2px);
+            border-color: #929889;
+            box-shadow: 0 7px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .location-card.selected {
+            border-color: var(--accent-dark);
+            background: #f5f9e9;
+            box-shadow: 5px 5px 0 var(--accent);
+        }
+
+        .location-radio {
+            position: absolute;
+            top: 25px;
+            right: 24px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-dark);
+        }
+
+        .location-name {
+            margin: 0 42px 18px 0;
+            font-size: 31px;
+            line-height: 1;
+        }
+
+        .location-area {
+            margin: -7px 0 21px 0;
+            color: var(--muted);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+        }
+
+        .location-details {
+            margin: 0;
+        }
+
+        .location-detail {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+            gap: 8px;
+            padding: 8px 0;
+            border-top: 1px solid #deddd4;
+        }
+
+        .location-detail dt {
+            margin: 0;
+            color: var(--muted);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .location-detail dd {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .registration {
+            padding-top: 32px;
+            border-top: 3px solid var(--ink);
+        }
+
+        .registration-heading {
+            margin: 0 0 7px 0;
+            font-size: 34px;
+            font-weight: 500;
+        }
+
+        .registration-note {
+            margin: 0 0 24px 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .selected-location {
+            display: none;
+            margin: 0 0 18px 0;
+            padding: 12px 15px;
+            background: #edf5d7;
+            border-left: 5px solid var(--accent-dark);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 7px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .email-input {
+            display: block;
+            width: min(100%, 480px);
+            padding: 13px 14px;
+            margin-bottom: 15px;
+            border: 2px solid #aaa99f;
+            background: white;
+            color: var(--ink);
+            font: 17px Arial, Helvetica, sans-serif;
+        }
+
+        .email-input:focus {
+            outline: 3px solid rgba(189, 218, 101, 0.55);
+            border-color: var(--accent-dark);
+        }
+
+        .submit-button {
+            padding: 13px 28px;
+            border: 2px solid var(--ink);
+            background: var(--ink);
+            color: white;
+            font: 800 15px Arial, Helvetica, sans-serif;
+            cursor: pointer;
+            transition:
+                background 120ms ease,
+                color 120ms ease,
+                transform 120ms ease;
+        }
+
+        .submit-button:hover {
+            background: var(--accent);
+            color: var(--ink);
+        }
+
+        .submit-button:active {
+            transform: translateY(1px);
+        }
+
+        .status {
+            min-height: 28px;
+            margin-top: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .status.error {
+            color: var(--warning);
+        }
+
+        .status.success {
+            color: #285b25;
+        }
+
+        .footer-note {
+            margin: 40px 0 0 0;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+
+        /*
+         * Mobile
+         */
+
+        @media (max-width: 700px) {
+
+            .page {
+                width: 100%;
+                margin: 0;
+                border-left: 0;
+                border-right: 0;
+                box-shadow: none;
+            }
+
+            .masthead {
+                padding: 28px 22px 26px 22px;
+            }
+
+            .content {
+                padding: 30px 22px 40px 22px;
+            }
+
+            h1 {
+                font-size: 48px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .event-summary {
+                grid-template-columns: 115px 1fr;
+            }
+
+            .location-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .location-card {
+                padding: 21px 19px;
+            }
+
+            .location-radio {
+                top: 21px;
+                right: 19px;
+            }
+
+            .location-name {
+                font-size: 28px;
+            }
+
+            .location-detail {
+                grid-template-columns: 78px 1fr;
+            }
+
+            .email-input {
+                width: 100%;
+            }
+
+            .submit-button {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <header class="masthead">
+
+        <p class="brand">
+            EigenAthens
+        </p>
+
+        <h1>
+            A Free Mathematics Lecture Series
+        </h1>
+
+        <p class="subtitle">
+            A sequence of informal public lectures developing a mathematical
+            problem from the ground up. No specialized mathematical background
+            is assumed. Questions and discussion are welcome after each meeting.
+        </p>
+
+        <span class="free-badge">
+            Free admission
+        </span>
+
+    </header>
+
+
+    <main class="content">
+
+        <section>
+
+            <h2 class="section-title">
+                About the series
+            </h2>
+
+            <div class="event-summary">
+
+                <div class="summary-label">
+                    Format
+                </div>
+
+                <div class="summary-value">
+                    Approximately 90 minutes of lecture followed by questions
+                    and open discussion.
+                </div>
+
+
+                <div class="summary-label">
+                    Frequency
+                </div>
+
+                <div class="summary-value">
+                    Approximately twice a week.
+                </div>
+
+
+                <div class="summary-label">
+                    Meetings
+                </div>
+
+                <div class="summary-value">
+                    In person.
+                </div>
+
+
+                <div class="summary-label">
+                    Audience
+                </div>
+
+                <div class="summary-value">
+                    Open to the general public. The material will be developed
+                    gradually from elementary ideas.
+                </div>
+
+
+                <div class="summary-label">
+                    Admission
+                </div>
+
+                <div class="summary-value">
+                    Free. Registration is used to estimate attendance and send
+                    venue and schedule updates.
+                </div>
+
+
+                <div class="summary-label">
+                    Series span
+                </div>
+
+                <div class="summary-value">
+                    Beginning in early October 2026. The sequence is expected
+                    to continue across multiple meetings.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section>
+
+            <h2 class="section-title">
+                Choose where you would attend
+            </h2>
+
+            <p class="location-intro">
+                The same lecture series will be offered in more than one part
+                of Metro Vancouver. Select the location that is practical for
+                you. Venue and schedule information may still be refined before
+                the first meeting.
+            </p>
+
+
+            <form id="registration-form">
+
+                <div class="location-grid">
+
+
+                    <!-- VANCOUVER -->
+
+                    <label
+                        class="location-card"
+                        id="vancouver-card"
+                    >
+
+                        <input
+                            class="location-radio"
+                            type="radio"
+                            name="location"
+                            value="vancouver"
+                        >
+
+                        <h3 class="location-name">
+                            Vancouver
+                        </h3>
+
+                        <p class="location-area">
+                            Vancouver / nearby western Metro Vancouver
+                        </p>
+
+                        <dl class="location-details">
+
+                            <div class="location-detail">
+                                <dt>Days</dt>
+                                <dd>
+                                    Weekday evenings; exact meeting days to be
+                                    confirmed.
+                                </dd>
+                            </div>
+
+                            <div class="location-detail">
+                                <dt>Time</dt>
+                                <dd>
+                                    Evening.
+                                </dd>
+                            </div>
+
+                            <div class="location-detail">
+                                <dt>Venue</dt>
+                                <dd>
+                                    To be decided. Likely a central Vancouver
+                                    location such as Vancouver Public Library
+                                    Central Branch or another transit-accessible
+                                    meeting space.
+                                </dd>
+                            </div>
+
+                            <div class="location-detail">
+                                <dt>Access</dt>
+                                <dd>
+                                    Preference will be given to a location close
+                                    to rapid transit.
+                                </dd>
+                            </div>
+
+                        </dl>
+
+                    </label>
+
+
+
+                    <!-- BURNABY -->
+
+                    <label
+                        class="location-card"
+                        id="burnaby-card"
+                    >
+
+                        <input
+                            class="location-radio"
+                            type="radio"
+                            name="location"
+                            value="burnaby"
+                        >
+
+                        <h3 class="location-name">
+                            Burnaby
+                        </h3>
+
+                        <p class="location-area">
+                            Burnaby / eastern Metro Vancouver
+                        </p>
+
+                        <dl class="location-details">
+
+                            <div class="location-detail">
+                                <dt>Days</dt>
+                                <dd>
+                                    Weekday evenings; exact meeting days to be
+                                    confirmed.
+                                </dd>
+                            </div>
+
+                            <div class="location-detail">
+                                <dt>Time</dt>
+                                <dd>
+                                    Evening.
+                                </dd>
+                            </div>
+
+                            <div class="location-detail">
+                                <dt>Venue</dt>
+                                <dd>
+                                    To be decided. Likely a central Burnaby
+                                    community centre, library, or other
+                                    transit-accessible meeting room.
+                                </dd>
+                            </div>
+
+                            <div class="location-detail">
+                                <dt>Access</dt>
+                                <dd>
+                                    Preference will be given to a location near
+                                    SkyTrain or another major transit route.
+                                </dd>
+                            </div>
+
+                        </dl>
+
+                    </label>
+
+                </div>
+
+
+
+                <section class="registration">
+
+                    <h2 class="registration-heading">
+                        Register your interest
+                    </h2>
+
+                    <p class="registration-note">
+                        Choose one location above, then enter your email.
+                        Exact venue and meeting information can be sent once
+                        arrangements are confirmed.
+                    </p>
+
+
+                    <div
+                        class="selected-location"
+                        id="selected-location"
+                    >
+                    </div>
+
+
+                    <label
+                        class="field-label"
+                        for="email"
+                    >
+                        Email address
+                    </label>
+
+                    <input
+                        class="email-input"
+                        id="email"
+                        name="email"
+                        type="email"
+                        autocomplete="email"
+                        placeholder="you@example.com"
+                        required
+                    >
+
+
+                    <button
+                        class="submit-button"
+                        type="submit"
+                        id="submit-button"
+                    >
+                        Register
+                    </button>
+
+
+                    <p
+                        class="status"
+                        id="status"
+                    >
+                    </p>
+
+                </section>
+
+            </form>
+
+        </section>
+
+
+        <p class="footer-note">
+            Registering indicates interest in attending. It does not require
+            payment and does not commit you to attend. Schedule and venue
+            details may be updated as rooms are confirmed.
+        </p>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    function getSelectedLocation()
+    {
+        var selected;
+
+        selected =
+            document.querySelector(
+                'input[name="location"]:checked'
+            );
+
+        return selected;
+    }
+
+
+    function clearCardSelection()
+    {
+        var cards;
+        var i;
+
+        cards =
+            document.querySelectorAll(
+                ".location-card"
+            );
+
+        for (i = 0; i < cards.length; i++)
+        {
+            cards[i].classList.remove(
+                "selected"
+            );
+        }
+    }
+
+
+    function locationChanged()
+    {
+        var selected;
+        var card;
+        var selectedMessage;
+        var status;
+
+        selected =
+            getSelectedLocation();
+
+        clearCardSelection();
+
+        status =
+            document.getElementById(
+                "status"
+            );
+
+        status.textContent = "";
+        status.className = "status";
+
+
+        if (selected == null)
+        {
+            return;
+        }
+
+
+        card =
+            selected.closest(
+                ".location-card"
+            );
+
+        card.classList.add(
+            "selected"
+        );
+
+
+        selectedMessage =
+            document.getElementById(
+                "selected-location"
+            );
+
+
+        if (selected.value == "vancouver")
+        {
+            selectedMessage.textContent =
+                "Selected location: Vancouver";
+        }
+
+        if (selected.value == "burnaby")
+        {
+            selectedMessage.textContent =
+                "Selected location: Burnaby";
+        }
+
+
+        selectedMessage.style.display =
+            "block";
+    }
+
+
+    function registrationSubmitted(event)
+    {
+        var selected;
+        var email;
+        var status;
+
+        event.preventDefault();
+
+
+        selected =
+            getSelectedLocation();
+
+        email =
+            document.getElementById(
+                "email"
+            );
+
+        status =
+            document.getElementById(
+                "status"
+            );
+
+
+        /*
+         * Explicitly refuse submission if
+         * neither location card was selected.
+         */
+
+        if (selected == null)
+        {
+            status.textContent =
+                "Please select a location before registering.";
+
+            status.className =
+                "status error";
+
+            return;
+        }
+
+
+        /*
+         * Let the browser's email field rules
+         * tell us whether the email is valid.
+         */
+
+        if (!email.checkValidity())
+        {
+            email.reportValidity();
+
+            status.textContent =
+                "Please enter a valid email address.";
+
+            status.className =
+                "status error";
+
+            return;
+        }
+
+
+        /*
+         * DEMONSTRATION SUCCESS.
+         *
+         * Later, this is where your XMLHttpRequest
+         * registration POST will begin.
+         */
+
+        status.textContent =
+            "Ready to submit registration for " +
+            selected.value +
+            ".";
+
+        status.className =
+            "status success";
+
+
+        console.log(
+            "location:",
+            selected.value
+        );
+
+        console.log(
+            "email:",
+            email.value
+        );
+    }
+
+
+    function installEventHandlers()
+    {
+        var radios;
+        var form;
+        var i;
+
+        radios =
+            document.querySelectorAll(
+                'input[name="location"]'
+            );
+
+
+        for (i = 0; i < radios.length; i++)
+        {
+            radios[i].addEventListener(
+                "change",
+                locationChanged
+            );
+        }
+
+
+        form =
+            document.getElementById(
+                "registration-form"
+            );
+
+        form.addEventListener(
+            "submit",
+            registrationSubmitted
+        );
+    }
+
+
+    installEventHandlers();
+
+</script>
+
+</body>
+
+</html>

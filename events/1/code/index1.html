@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+
+  <title>eigen events</title>
+
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background-color: rgb(185, 179, 175);
+    }
+
+    .event-row {
+      display: flex;
+      min-width: 1000px;
+    }
+
+    .poster-column {
+      width: 200px;
+      flex-shrink: 0;
+    }
+
+    .poster-image {
+      width: 180px;
+    }
+
+    .details-column {
+      width: 600px;
+      min-width: 250px;
+    }
+
+    .detail-row {
+      display: flex;
+    }
+
+    .detail-label {
+      width: 150px;
+      flex-shrink: 0;
+      text-align: right;
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+
+    .action-column {
+      width: 200px;
+      min-width: 150px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+ 
+<body>
+
+  <center>
+    <p>
+      This same lecture series is being delivered at multiple locations.
+      Please register only in one place.
+    </p>
+  </center>
+
+  <div id="events"></div>
+
+  <script>
+
+    //cheatsheet: generic dom nodes
+    //The most important guaranteed Node properties are:
+    // node.nodeType
+    // node.nodeName
+    // node.nodeValue
+    // node.textContent
+
+    // node.parentNode
+    // node.childNodes
+    // node.firstChild
+    // node.lastChild
+
+    // node.previousSibling
+    // node.nextSibling
+
+
+    // and useful methods include:
+    // node.hasChildNodes()
+    // node.appendChild(...)
+    // node.removeChild(...)
+    // node.insertBefore(...)
+    // node.cloneNode(...)
+    
+    // .children[i] and .childelementcount only give access to html element chilcren
+    //.childnodes gives access to all: returns NODELIST, a blink native structure 
+    // exposed via js wrappers. NOT AN ARRAY!!!
+    // endcheatsheet
+
+    // function p(x) {console.log(x);}
+
+    //console.dir(node) for printinf html nodes in object format
+    function nodeTypeName(node)
+    {
+        var names = {
+            1: "ELEMENT_NODE",
+            2: "ATTRIBUTE_NODE",
+            3: "TEXT_NODE",
+            4: "CDATA_SECTION_NODE",
+            5: "ENTITY_REFERENCE_NODE",
+            6: "ENTITY_NODE",
+            7: "PROCESSING_INSTRUCTION_NODE",
+            8: "COMMENT_NODE",
+            9: "DOCUMENT_NODE",
+            10: "DOCUMENT_TYPE_NODE",
+            11: "DOCUMENT_FRAGMENT_NODE",
+            12: "NOTATION_NODE"
+        };
+        return names[node.nodeType];
+    }
+
+    function isWhitespaceText(node) {
+        return (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() === "");
+    }
+
+    function printNode(node, depth, maxTextLen) {
+        // stringify prints\n instead of an actual newline. 
+        if(isWhitespaceText(node)) return;
+        var value = node.nodeValue === null ? "null" : JSON.stringify(node.nodeValue.slice(0,maxTextLen));
+        var length = node.nodeValue === null ? 0 : node.nodeValue.length;
+        console.log("     ".repeat(depth) + "TYPE: " + nodeTypeName(node) + "|NAME: " + node.nodeName + "|VALUE: " + value + "(total "+length+" chars)");
+        // console.log("      ".repeat(depth) + "text content: "+node.textContent);
+
+        // console.log("\n");
+    }
+    function dft(root, depth) {
+        printNode(root, depth, 30);
+            for(let i=0;i<root.childNodes.length;i++) {
+                dft(root.childNodes[i], depth+1);
+            }
+            // console.log("\n");
+    }
+    function printDom() {
+        dft(document.getRootNode(), 0);
+    }
+
+
+    var appsScriptURL =
+      "https://script.google.com/macros/s/AKfycbwytaG0h6ZI24Hci1vtT3kIRFSoiCB9dhT2zqCinFEkjRSGNAaTORmXT6QdaZj0D6nBEg/exec";
+
+
+    /* TODO: replace html returning with programatic construction of DOM coz changing inner html
+    can cause browser to edit original html, reparse whole, possibly altering or reconstructing
+    whole or parts of dom, changing behavuiour of nodes, previously attached event listeners etc
+
+    write this kinda stuff instead
+*/
+    function makeDetail(label, value)
+{
+    var row;
+    var labelDiv;
+    var valueDiv;
+
+    row = document.createElement("div");
+    row.className = "detail-row";
+
+    labelDiv = document.createElement("div");
+    labelDiv.className = "detail-label";
+    labelDiv.textContent = label + ":";
+
+    valueDiv = document.createElement("div");
+    valueDiv.className = "detail-value";
+    valueDiv.textContent = value;
+
+    row.appendChild(labelDiv);
+    row.appendChild(valueDiv);
+
+    return row;
+}
+function makeEvent(event)
+{
+    var eventRow, posterColumn, posterImage, detailsColumn;
+    var actionColumn, freeText, form, hiddenGroup, emailInput, button, status;
+
+    eventRow = document.createElement("div");
+    eventRow.className = "event-row";
+
+    posterColumn = document.createElement("div");
+    posterColumn.className = "poster-column";
+
+    posterImage = document.createElement("img");
+    posterImage.className = "poster-image";
+    posterImage.src = event.poster;
+
+    posterColumn.appendChild(posterImage);
+
+    detailsColumn = document.createElement("div");
+    detailsColumn.className = "details-column";
+
+    detailsColumn.appendChild(makeDetail("Group ID", event.group));
+    detailsColumn.appendChild(makeDetail("Area", event.area));
+    detailsColumn.appendChild(makeDetail("Format", event.format));
+    detailsColumn.appendChild(makeDetail("Frequency", event.frequency));
+    detailsColumn.appendChild(makeDetail("Meetings", event.meetings));
+    detailsColumn.appendChild(makeDetail("Time", event.time));
+    detailsColumn.appendChild(makeDetail("Meeting days", event.days));
+    detailsColumn.appendChild(makeDetail("Venue", event.venue));
+    detailsColumn.appendChild(makeDetail("Span", event.span));
+
+    actionColumn = document.createElement("div");
+    actionColumn.className = "action-column";
+
+    freeText = document.createElement("p");
+    freeText.textContent = "Free admission.";
+
+    form = document.createElement("form");
+    form.className = "registration-form";
+    form.action = appsScriptURL;
+    form.method = "post";
+
+    hiddenGroup = document.createElement("input");
+    hiddenGroup.type = "hidden";
+    hiddenGroup.name = "group";
+    hiddenGroup.value = event.group;
+
+    emailInput = document.createElement("input");
+    emailInput.type = "email";
+    emailInput.name = "email";
+    emailInput.required = true;
+
+    button = document.createElement("button");
+    button.type = "submit";
+    button.textContent = "Submit";
+
+    status = document.createElement("p");
+    status.className = "status";
+
+    form.appendChild(hiddenGroup);
+    form.appendChild(emailInput);
+    form.appendChild(button);
+    form.appendChild(status);
+
+    actionColumn.appendChild(freeText);
+    actionColumn.appendChild(form);
+
+    eventRow.appendChild(posterColumn);
+    eventRow.appendChild(detailsColumn);
+    eventRow.appendChild(actionColumn);
+
+    return eventRow;
+}
+
+    function detail(label, value)
+    {
+      return `
+        <div class="detail-row">
+
+          <div class="detail-label">
+            ${label}:
+          </div>
+
+          <div class="detail-value">
+            ${value}
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function makeEvent(event)
+    {
+      return `
+        <div class="event-row">
+
+          <div class="poster-column">
+
+            <img
+              class="poster-image"
+              src="${event.poster}"
+            >
+
+          </div>
+
+
+          <div class="details-column">
+
+            ${detail("Group ID", event.group)}
+            ${detail("Area", event.area)}
+            ${detail("Format", event.format)}
+            ${detail("Frequency", event.frequency)}
+            ${detail("Meetings", event.meetings)}
+            ${detail("Time", event.time)}
+            ${detail("Meeting days", event.days)}
+            ${detail("Venue", event.venue)}
+            ${detail("Span", event.span)}
+
+          </div>
+
+
+          <div class="action-column">
+
+            <p>
+              Free admission.
+            </p>
+
+            <form
+              class="registration-form"
+              action="${appsScriptURL}"
+              method="post"
+            >
+
+              <input
+                type="hidden"
+                name="group"
+                value="${event.group}"
+              >
+
+              <input
+                type="email"
+                name="email"
+                required
+              >
+
+              <button type="submit">
+                Submit
+              </button>
+
+              <p class="status"></p>
+
+            </form>
+
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function formSubmitted(event)
+    {
+      var form;
+      var button;
+      var status;
+
+      form = this;
+
+      button =
+        form.querySelector("button");
+
+      status =
+        form.querySelector(".status");
+
+
+      button.disabled = true;
+
+      button.textContent =
+        "Submitting...";
+
+      status.textContent =
+        "Please wait.";
+
+
+      /*
+       * We are NOT calling:
+       *
+       * event.preventDefault();
+       *
+       * Therefore the browser still performs
+       * the normal HTML form submission.
+       *
+       * The POST request will be made to:
+       *
+       * appsScriptURL
+       *
+       * and the browser will navigate to
+       * whatever response/redirect Google returns.
+       */
+    }
+
+
+    function installFormHandlers()
+    {
+      var forms;
+      var i;
+
+      forms =
+        document.querySelectorAll(
+          ".registration-form"
+        );
+
+
+      for (i = 0; i < forms.length; i++)
+      {
+        forms[i].addEventListener(
+          "submit",
+          formSubmitted
+        );
+      }
+    }
+
+
+    function eventsRequestChanged()
+    {
+      var events;
+      var eventsContainer;
+      var i;
+
+
+      console.log(
+        "readyState:",
+        this.readyState
+      );
+
+
+      /*
+       * XMLHttpRequest may call this function
+       * several times as the request progresses.
+       *
+       * readyState == 4 means:
+       *
+       * DONE
+       */
+
+      if (this.readyState != 4)
+      {
+        return;
+      }
+
+
+      console.log(
+        "HTTP status:",
+        this.status
+      );
+
+
+      console.log(
+        "Raw response text:",
+        this.responseText
+      );
+
+
+      if (this.status != 200)
+      {
+        console.log(
+          "events.json could not be loaded."
+        );
+
+        return;
+      }
+
+
+      /*
+       * responseText is just a JavaScript string
+       * containing the bytes of the response body
+       * after the browser has decoded them as text.
+       *
+       * JSON.parse turns that JSON text into
+       * ordinary JavaScript objects.
+       */
+
+      events =
+        JSON.parse(
+          this.responseText
+        );
+
+
+      eventsContainer =
+        document.getElementById(
+          "events"
+        );
+
+
+      for (i = 0; i < events.length; i++)
+      {
+        eventsContainer.innerHTML +=
+          makeEvent(
+            events[i]
+          );
+      }
+
+
+      /*
+       * The forms were created by makeEvent().
+       *
+       * Therefore we wait until AFTER the
+       * event HTML has been inserted before
+       * searching for the forms.
+       */
+
+      installFormHandlers();
+    }
+
+
+    function loadEvents()
+    {
+      var request;
+
+
+      request =
+        new XMLHttpRequest();
+
+
+      /*
+       * Configure the request.
+       *
+       * GET
+       * ../events.json
+       * asynchronous = true
+       */
+
+      request.open(
+        "GET",
+        "../events.json",
+        true
+      );
+
+
+      /*
+       * Give XMLHttpRequest the address of
+       * the function that should be called
+       * whenever readyState changes.
+       */
+
+      request.onreadystatechange =
+        eventsRequestChanged;
+
+
+      /*
+       * Actually start the request.
+       */
+
+      request.send();
+
+
+      /*
+       * send() returns before the response
+       * necessarily arrives.
+       *
+       * Later, Chrome calls
+       * eventsRequestChanged().
+       */
+    }
+
+
+    loadEvents();
+
+  </script>
+
+</body>
+
+</html>
+
+<!--
+gpt: has bug: events .json may not have loaded before .registration form line
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>eigen events</title>
+
+  <style>
+    body { font-family:'Times New Roman', Times, serif; background-color:rgb(185,179,175); }
+    .event-row { display:flex; min-width:1000px; }
+    .poster-column { width:200px; flex-shrink:0; }
+    .poster-image { width:180px; }
+    .details-column { width:600px; min-width:250px; }
+    .detail-row { display:flex; }
+    .detail-label { width:150px; flex-shrink:0; text-align:right; padding-right:10px; white-space:nowrap; }
+    .action-column { width:200px; min-width:150px; white-space:nowrap; }
+  </style>
+</head>
+
+<body>
+
+  <center><p>This same lecture series is being delivered at multiple locations. Please register only in one place.</p></center>
+
+  <div id="events"></div>
+
+  <script>
+
+    const appsScriptURL =
+      "https://script.google.com/macros/s/AKfycbwytaG0h6ZI24Hci1vtT3kIRFSoiCB9dhT2zqCinFEkjRSGNAaTORmXT6QdaZj0D6nBEg/exec";
+
+    function detail(label, value) {
+      return `<div class="detail-row"><div class="detail-label">${label}:</div><div class="detail-value">${value}</div></div>`;
+    }
+
+
+    function makeEvent(event) {
+
+      return `
+        <div class="event-row">
+
+          <div class="poster-column">
+            <img class="poster-image" src="${event.poster}">
+          </div>
+
+          <div class="details-column">
+            ${detail("Group ID", event.group)}
+            ${detail("Area", event.area)}
+            ${detail("Format", event.format)}
+            ${detail("Frequency", event.frequency)}
+            ${detail("Meetings", event.meetings)}
+            ${detail("Time", event.time)}
+            ${detail("Meeting days", event.days)}
+            ${detail("Venue", event.venue)}
+            ${detail("Span", event.span)}
+          </div>
+
+          <div class="action-column">
+
+            <p>Free admission.</p>
+
+            <form class="registration-form" action="${appsScriptURL}" method="post">
+
+              <input type="hidden" name="group" value="${event.group}">
+              <input type="email" name="email" required>
+              <button type="submit">Submit</button>
+              <p class="status"></p>
+
+            </form>
+
+          </div>
+
+        </div>
+      `;
+    }
+
+    async function loadEvents() {
+    const response = await fetch("../events.json");
+    const events = await response.json();
+
+    const eventsContainer =
+    document.getElementById("events");
+
+    for (const event of events) eventsContainer.innerHTML += makeEvent(event);
+    }
+
+    loadEvents();
+    // const eventsContainer = document.getElementById("events");
+
+    // for (const event of events) {
+    //   eventsContainer.innerHTML += makeEvent(event);
+    // }
+
+
+    const forms = document.querySelectorAll(".registration-form");
+
+    for (const form of forms) {
+
+      form.addEventListener("submit", function () {
+
+        const button = form.querySelector("button");
+        const status = form.querySelector(".status");
+
+        button.disabled = true;
+        button.textContent = "Submitting...";
+        status.textContent = "Please wait.";
+
+      });
+
+    }
+
+  </script>
+
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+  <title>eigen events</title>
+
+  <style>
+    body { font-family:'Times New Roman', Times, serif; background-color:rgb(185,179,175); }
+
+    .event-row { display:flex; min-width:700px; }
+
+    .poster-column { width:200px; flex-shrink:0; }
+    .poster-image { width:180px; }
+
+    .details-column { width:600px; min-width:250px; }
+    .detail-row { display:flex; }
+    .detail-label { width:150px; flex-shrink:0; text-align:right; padding-right:10px; white-space:nowrap; }
+    /* .detail-label { width:70px; flex-shrink:0; } */
+    /* .detail-value { width:180px; } */
+
+    .action-column { width:200px; min-width:150px; white-space:nowrap; }
+  </style>
+</head>
+
+<body>
+
+  <center><p>this same lecture series is being delivered at multiple locations. please register only in one place</p></center>
+
+  <div class="event-row">
+
+    <div class="poster-column">
+      <img class="poster-image" src="poster.jpg">
+    </div>
+
+    <div class="details-column">
+      <div class="detail-row"><div class="detail-label">Group ID:</div><div class="detail-value">A</div></div>
+      <div class="detail-row"><div class="detail-label">Area:</div><div class="detail-value">metro vancouver</div></div>
+      <div class="detail-row"><div class="detail-label">Format:</div><div class="detail-value">~90 mins talk, ~60 mins Q&A</div></div>
+      <div class="detail-row"><div class="detail-label">frequency:</div><div class="detail-value">twice a week: one weekday, one weekend day. eg. wednesdays and saturdays</div></div>
+      <div class="detail-row"><div class="detail-label">meetings:</div><div class="detail-value">in person</div></div>
+      <div class="detail-row"><div class="detail-label">Time:</div><div class="detail-value">evenings | 6:30 pm ish - 9:00 pm ish</div></div>
+      <div class="detail-row"><div class="detail-label">meeting days:</div><div class="detail-value">TBD. once decided, registrants will receive emails</div></div>
+      <div class="detail-row"><div class="detail-label">Venue:</div><div class="detail-value">TBDonce decided, registrants will receive emails</div></div>
+      <div class="detail-row"><div class="detail-label">Span:</div><div class="detail-value">early oct to late oct</div></div>
+      <!-- meetings can be eliminated. just say venue=web for online ones 
+    </div>
+
+    <div class="action-column">
+      <p>Free admission.</p>
+      <button>Register</button>
+      <form
+  id="formFoo"
+  action="https://script.google.com/macros/s/AKfycbwytaG0h6ZI24Hci1vtT3kIRFSoiCB9dhT2zqCinFEkjRSGNAaTORmXT6QdaZj0D6nBEg/exec"
+  method="post">
+
+  <input
+    type="email"
+    name="email"
+    required>
+
+  <button
+    id="buttonFoo"
+    type="submit">
+    Submit
+  </button>
+
+  <p id="statusFoo"></p>
+
+</form>
+
+<script>
+
+  const formFoo =
+    document.getElementById("formFoo");
+
+  const buttonFoo =
+    document.getElementById("buttonFoo");
+
+  const statusFoo =
+    document.getElementById("statusFoo");
+
+
+  formFoo.addEventListener("submit", function () {
+
+    buttonFoo.disabled = true;
+
+    buttonFoo.textContent =
+      "Submitting...";
+
+    statusFoo.textContent =
+      "Please wait.";
+
+      // its g for global: dont stop at first hyphen. /-/ is regex
+      crypto.randomUUID().replace(/-/g, '')
+  });
+
+</script> 
+    </div>
+
+  </div>
+   <div class="event-row">
+
+    <div class="poster-column">
+      <img class="poster-image" src="poster.jpg">
+    </div>
+
+    <div class="details-column">
+      <div class="detail-row"><div class="detail-label">Group ID:</div><div class="detail-value">A</div></div>
+      <div class="detail-row"><div class="detail-label">Area:</div><div class="detail-value">metro vancouver</div></div>
+      <div class="detail-row"><div class="detail-label">Format:</div><div class="detail-value">~90 mins talk, ~60 mins Q&A</div></div>
+      <div class="detail-row"><div class="detail-label">frequency:</div><div class="detail-value">twice a week: one weekday, one weekend day. eg. wednesdays and saturdays</div></div>
+      <div class="detail-row"><div class="detail-label">meetings:</div><div class="detail-value">in person</div></div>
+      <div class="detail-row"><div class="detail-label">Time:</div><div class="detail-value">evenings | 6:30 pm ish - 9:00 pm ish</div></div>
+      <div class="detail-row"><div class="detail-label">meeting days:</div><div class="detail-value">TBD. once decided, registrants will receive emails</div></div>
+      <div class="detail-row"><div class="detail-label">Venue:</div><div class="detail-value">TBDonce decided, registrants will receive emails</div></div>
+      <div class="detail-row"><div class="detail-label">Span:</div><div class="detail-value">early oct to late oct</div></div>
+      <!-- meetings can be eliminated. just say venue=web for online ones 
+    </div>
+
+    <div class="action-column">
+      <p>Free admission.</p>
+      <button>Register</button>
+      <form
+  id="formFoo"
+  action="https://script.google.com/macros/s/AKfycbwytaG0h6ZI24Hci1vtT3kIRFSoiCB9dhT2zqCinFEkjRSGNAaTORmXT6QdaZj0D6nBEg/exec"
+  method="post">
+
+  <input
+    type="email"
+    name="email"
+    required>
+
+  <button
+    id="buttonFoo"
+    type="submit">
+    Submit
+  </button>
+
+  <p id="statusFoo"></p>
+
+</form>
+
+<script>
+
+  const formFoo =
+    document.getElementById("formFoo");
+
+  const buttonFoo =
+    document.getElementById("buttonFoo");
+
+  const statusFoo =
+    document.getElementById("statusFoo");
+
+
+  formFoo.addEventListener("submit", function () {
+
+    buttonFoo.disabled = true;
+
+    buttonFoo.textContent =
+      "Submitting...";
+
+    statusFoo.textContent =
+      "Please wait.";
+
+      // its g for global: dont stop at first hyphen. /-/ is regex
+      crypto.randomUUID().replace(/-/g, '')
+  });
+
+</script> 
+    </div>
+
+  </div>
+
+</body>
+</html>
+ -->

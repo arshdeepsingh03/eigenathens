@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>POST experiment</title>
+</head>
+
+<body>
+
+    <h1>POST experiment</h1>
+
+    <form id="myForm">
+        <label for="nameBox">Name:</label>
+        <input id="nameBox" type="text">
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <p id="status"></p>
+
+    <script>
+        var form;
+        var nameBox;
+        var statusParagraph;
+
+        form = document.getElementById("myForm");
+        nameBox = document.getElementById("nameBox");
+        statusParagraph = document.getElementById("status");
+
+
+        function requestStateChanged()
+        {
+            /*asdasdf
+             * "this" is the XMLHttpRequest object
+             * whose state changed.
+             */
+
+            console.log("readyState changed to:", this.readyState);
+
+            if (this.readyState == 4)
+            {
+                /*
+                 * The HTTP operation has finished.
+                 */
+
+                console.log("HTTP status:", this.status);
+                console.log("Response text:", this.responseText);
+
+                statusParagraph.textContent =
+                    "Server returned HTTP status " + this.status;
+
+                /*
+                 * Later we can inspect:
+                 *
+                 * this.status
+                 * this.responseText
+                 * this.getResponseHeader(...)
+                 * this.getAllResponseHeaders()
+                 *
+                 * and decide whether registration succeeded.
+                 */
+            }
+        }
+
+
+        function formSubmitted(event)
+        {
+            var request;
+            var text;
+            var body;
+
+            /*
+             * This is the critical instruction.
+             *
+             * Normally the browser sees a form submission and
+             * performs the form's normal navigation behavior.
+             *
+             * We cancel that behavior.
+             * arsh: default is to navigate to the page html that 
+             * comes as response to the submit triggered get or post
+             */
+            event.preventDefault();
+
+
+            /*
+             * Get the characters typed into the input box.
+             */
+            text = nameBox.value;
+
+
+            /*
+             * Construct the body ourselves.
+             *
+             * For this experiment we'll use a simple
+             * URL-encoded body:
+             *
+             *     name=Arshdeep
+             *
+             * encodeURIComponent handles characters that cannot
+             * safely appear literally in this encoding.
+             */
+            body = "name=" + encodeURIComponent(text);
+
+
+            /*
+             * Construct an XMLHttpRequest object.
+             */
+            request = new XMLHttpRequest();
+
+
+            /*
+             * Tell it what HTTP operation we want.
+             *
+             * true means asynchronous.
+             */
+            request.open("get", "www.google.com", true);
+            request.open(
+                "POST",
+                "https://script.google.com/macros/s/AKfycbwytaG0h6ZI24Hci1vtT3kIRFSoiCB9dhT2zqCinFEkjRSGNAaTORmXT6QdaZj0D6nBEg/exec",
+                true
+            );
+
+
+            /*
+             * Tell the server how we're encoding the body.
+             */
+            
+            request.setRequestHeader(
+                "Content-Type",
+                "application/x-www-form-urlencoded"
+            );
+
+
+            /*
+             * Install the function that Chrome should call
+             * whenever the request's state changes.
+             */
+            request.onreadystatechange = requestStateChanged;
+
+
+            /*
+             * Start the HTTP operation.
+             *
+             * This does NOT mean:
+             *
+             *     wait here until the server responds.
+             *
+             * Chrome starts the operation and send() returns.
+             */
+            request.send(body);
+
+
+            /*
+             * Execution can reach here while the HTTP request
+             * is still somewhere out in the world.
+             */
+            console.log("send() returned");
+        }
+
+
+        /*
+         * Tell Chrome:
+         *
+         * When this form gets a "submit" event,
+         * call formSubmitted().
+         */
+        form.addEventListener("submit", formSubmitted);
+
+    </script>
+
+</body>
+</html>

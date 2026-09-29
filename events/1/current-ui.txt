@@ -1,0 +1,44 @@
+details column:
+where: vancouver
+venue:tbd (probably @central library or@ marpole)
+	register to recieve email when upon venur finalization
+
+where: burnaby
+venue: tbd
+	register...
+
+where: web
+venue: zoom
+	register to getg meeting link
+
+gen to specific: first: what: talk series(about 10 lectures), where: vanc, 
+
+
+
+[
+  {
+  total lectures: about 6
+    "group": "A",
+    "area": "Metro Vancouver",
+    "format": "~90 mins talk, ~60 mins Q&A",
+    "frequency": "twice a week: one weekday, one weekend day",
+    "meetings": "in person",
+    "time": "evenings | 6:30 pm ish - 9:00 pm ish",
+    "days": "TBD. Once decided, registrants will receive emails",
+    "venue": "TBD. Once decided, registrants will receive emails",
+    "span": "early Oct to late Oct",
+    "poster": "poster.jpg"
+  },
+  {
+    "group": "B",
+    "area": "Burnaby / Coquitlam",
+    "format": "~90 mins talk, ~60 mins Q&A",
+    "frequency": "twice a week: one weekday, one weekend day",
+    "meetings": "in person",
+    "time": "evenings | 6:30 pm ish - 9:00 pm ish",
+    "days": "TBD. Once decided, registrants will receive emails",
+    "venue": "TBD. Once decided, registrants will receive emails",
+    "span": "early Oct to late Oct",
+    "poster": "poster.jpg"
+  }
+]

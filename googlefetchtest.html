@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<input id="email" type="email">
+<button id="submit">Submit</button>
+
+<p id="result"></p>
+
+<script>
+
+const url =
+  "https://script.google.com/macros/s/AKfycbwytaG0h6ZI24Hci1vtT3kIRFSoiCB9dhT2zqCinFEkjRSGNAaTORmXT6QdaZj0D6nBEg/exec";
+
+document.getElementById("submit").onclick =
+  async function () {
+
+    const email =
+      document.getElementById("email").value;
+
+    const body =
+      new URLSearchParams();
+
+    //makes a@x.com to a%40x.com
+    body.append("email", email);
+    
+
+    console.log("sending POST");
+
+    try {
+
+      const response =
+        await fetch(url, {
+          method: "POST",
+          body: body
+        });
+
+      console.log("fetch returned");
+      console.log(response);
+
+      const text =
+        await response.text();
+
+      console.log("response text:");
+      console.log(text);
+
+      document.getElementById("result").textContent =
+        text;
+
+    } catch (error) {
+
+      console.log("fetch failed:");
+      console.log(error);
+
+      document.getElementById("result").textContent =
+        "FETCH FAILED — see console";
+    }
+  };
+
+</script>
+
+</body>
+</html>

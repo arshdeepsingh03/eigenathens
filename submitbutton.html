@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+<form
+  id="formFoo"
+  action="https://script.google.com/macros/s/AKfycbwytaG0h6ZI24Hci1vtT3kIRFSoiCB9dhT2zqCinFEkjRSGNAaTORmXT6QdaZj0D6nBEg/exec"
+  method="post">
+
+  <input
+    type="email"
+    name="email"
+    required>
+
+  <button
+    id="buttonFoo"
+    type="submit">
+    Submit
+  </button>
+
+  <p id="statusFoo"></p>
+
+</form>
+
+<script>
+
+  const formFoo =
+    document.getElementById("formFoo");
+
+  const buttonFoo =
+    document.getElementById("buttonFoo");
+
+  const statusFoo =
+    document.getElementById("statusFoo");
+
+
+  formFoo.addEventListener("submit", function () {
+
+    buttonFoo.disabled = true;
+
+    buttonFoo.textContent =
+      "Submitting...";
+
+    statusFoo.textContent =
+      "Please wait.";
+
+      // its g for global: dont stop at first hyphen. /-/ is regex
+      crypto.randomUUID().replace(/-/g, '')
+  });
+
+</script> 
+
+</body>
+
+</html>

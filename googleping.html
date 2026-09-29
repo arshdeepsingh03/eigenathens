@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Math Talk</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 14px 20px;
+      background: black;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Free Mathematics Talk</h1>
+
+  <p>
+    A public mathematics talk will be held in Vancouver in early October.
+    Exact date and venue will depend partly on interest.
+  </p>
+
+  <p>
+    If you think you may attend, click below.
+  </p>
+
+  <a
+    id="interested"
+    class="button"
+    href="https://t.me/eigenathensbot">
+    Yes, I'm interested
+  </a>
+
+
+  <script>
+    const endpoint =
+      "https://script.google.com/macros/s/AKfycbxZcGMfpmkoOIfrvUWwvXnIh1vY_s5sFnP3r8tkko4t_-LYMUY-PQ-mHfQdYMsWpZqs/exec";
+
+    const link = document.getElementById("interested");
+
+    link.addEventListener("click", function () {
+
+      const data = new URLSearchParams();
+
+      data.append("interested", "yes");
+      data.append("source", "website");
+
+      navigator.sendBeacon(endpoint, data);
+
+    });
+  </script>
+
+</body>
+</html>

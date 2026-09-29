@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>eigen events</title>
+
+  <style>
+    body { font-family:'Times New Roman', Times, serif; background-color:rgb(185,179,175); }
+
+    .event-row { display:flex; min-width:700px; }
+
+    .poster-column { width:200px; flex-shrink:0; }
+    .poster-image { width:180px; }
+
+    .details-column { width:300px; min-width:250px; }
+    .detail-row { display:flex; }
+    .detail-label { width:70px; flex-shrink:0; }
+    .detail-value { width:180px; }
+
+    .action-column { width:200px; min-width:150px; white-space:nowrap; }
+  </style>
+</head>
+
+<body>
+
+  <center><p>ull find events list here</p></center>
+
+  <div class="event-row">
+
+    <div class="poster-column">
+      <img class="poster-image" src="1/poster.jpg">
+    </div>
+
+    <div class="details-column">
+      <div class="detail-row"><div class="detail-label">Venue:</div><div class="detail-value">Vancouver, Canada</div></div>
+      <div class="detail-row"><div class="detail-label">Date:</div><div class="detail-value">September 30</div></div>
+      <div class="detail-row"><div class="detail-label">Time:</div><div class="detail-value">7:00 PM</div></div>
+    </div>
+
+    <div class="action-column">
+      <!-- slash in 1/ means go into the folder "1" and serve index.html -->
+      <p><a href="1/">Free admission.</a></p>
+      <button>Register</button>
+    </div>
+
+  </div>
+
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html>
+    <head>
+        <title>eigen events</title>
+        
+<style>
+
+.event {
+  display: flex;
+}
+
+.image {
+  width: 200px;
+}
+
+.text {
+  width: 200px;
+}
+
+.action {
+  width: 200px;
+}
+
+</style>
+
+</head>
+
+<body style="font-family: 'Times New Roman', Times, serif;background-color: rgb(185,179,175);">
+        <center>
+           <p>ull find events list here</p>
+        </center>
+
+<div class="event">
+
+  <div class="image">
+    <img src="poster.jpg" width="180">
+  </div>
+
+  <div class="text">
+    <p>Mathematics Talk</p>
+    <p>September 30</p>
+    <p>7:00 PM</p>
+    <p>Vancouver</p>
+  </div>
+
+  <div class="action">
+    <p>Free admission.</p>
+
+    <button>
+      Register
+    </button>
+  </div>
+
+</div>
+
+<div style="display:flex; min-width:700px;">
+
+  <div style="width:200px; flex-shrink:0;">
+
+    <img
+      src="poster.jpg"
+      style="width:180px;">
+
+  </div>
+
+
+  <div style="width:300px; min-width:250px;">
+
+    <div style="display:flex;">
+
+      <div style="width:70px; flex-shrink:0;">
+        Venue:
+      </div>
+
+      <div style="width:180px;">
+        Vancouver, Canada
+      </div>
+
+    </div>
+
+
+    <div style="display:flex;">
+
+      <div style="width:70px; flex-shrink:0;">
+        Date:
+      </div>
+
+      <div style="width:180px;">
+        September 30
+      </div>
+
+    </div>
+
+
+    <div style="display:flex;">
+
+      <div style="width:70px; flex-shrink:0;">
+        Time:
+      </div>
+
+      <div style="width:180px;">
+        7:00 PM
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    style="
+      width:200px;
+      min-width:150px;
+      white-space:nowrap;
+    ">
+
+    <p>Free admission.</p>
+
+    <button>
+      Register
+    </button>
+
+  </div>
+
+</div>
+
+    </body>
+</html> -->
+
+<!-- 
+<script>
+
+    // .search is the part after '?' in the url. url search params is a CONStructor, and calss name hence new
+  const parametersFoo = new URLSearchParams(window.location.search);
+  const tokenFoo = parametersFoo.get("ad");
+    // .that dot means all elements with CLASS equaling string. # for id== etc
+  const eventsFoo = document.querySelectorAll(".eventFoo");
+
+  //wrong logic
+    // if(tokenFoo !== null) {
+    //     for(const i of eventsFoo) if(i.dataset.ad === token) x.hidden =  false;
+    // }
+  for (const eventFoo of eventsFoo) {
+    if (tokenFoo === null) eventFoo.hidden = false;
+    else if (eventFoo.dataset.ad === tokenFoo) eventFoo.hidden = false;
+  }
+
+
+      // its g for global: dont stop at first hyphen. /-/ is regex
+      crypto.randomUUID().replace(/-/g, '')
+
+</script>
+
+<div class="eventFoo" data-ad="A" hidden>
+  <h2 style="font-size: 30px;">Downtown Event</h2>
+  <p>Date: October 10</p>
+</div>
+
+<div class="eventFoo" data-ad="B" hidden>
+  <h2>Burnaby Event</h2>
+  <p>Date: October 12</p>
+</div>
+
+-->

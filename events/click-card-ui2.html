@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>EigenAthens — Mathematics Lecture Series</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ink: #172018;
+            --muted: #687068;
+            --paper: #f7f4eb;
+            --page: #d7d0c6;
+            --card: #fffdf7;
+            --accent: #c7e36f;
+            --accent-dark: #29451f;
+            --line: #cbc8bd;
+            --soft-line: #e2ded3;
+            --warning: #922d24;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page);
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .page {
+            width: min(1080px, calc(100% - 28px));
+            margin: 34px auto 70px auto;
+            background: var(--paper);
+            border: 1px solid #b8b3a8;
+            box-shadow: 0 14px 42px rgba(0, 0, 0, 0.12);
+        }
+
+
+        /*
+         * HEADER
+         */
+
+        .masthead {
+            padding: 40px 50px 34px 50px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brand {
+            margin: 0 0 20px 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            max-width: 820px;
+            font-size: clamp(42px, 7vw, 78px);
+            line-height: 0.95;
+            letter-spacing: -0.055em;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            max-width: 760px;
+            margin: 27px 0 0 0;
+            font-size: 20px;
+            line-height: 1.55;
+        }
+
+        .free-badge {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 8px 13px;
+            background: var(--accent);
+            border: 1px solid #abc955;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+
+
+        /*
+         * GENERAL CONTENT
+         */
+
+        .content {
+            padding: 42px 50px 52px 50px;
+        }
+
+        .section-title {
+            margin: 0 0 18px 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+
+        /*
+         * SHARED EVENT INFORMATION
+         */
+
+        .event-summary {
+            display: grid;
+            grid-template-columns: 175px 1fr;
+            margin-bottom: 48px;
+            border-top: 1px solid var(--line);
+        }
+
+        .summary-label,
+        .summary-value {
+            padding: 11px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .summary-label {
+            padding-right: 20px;
+            color: var(--muted);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .summary-value {
+            font-size: 17px;
+            line-height: 1.45;
+        }
+
+
+        /*
+         * LOCATION AREA
+         */
+
+        .location-layout {
+            display: grid;
+            grid-template-columns: minmax(270px, 0.8fr) minmax(350px, 1.2fr);
+            gap: 28px;
+            align-items: start;
+        }
+
+        .location-intro {
+            margin: 0 0 20px 0;
+            font-size: 17px;
+            line-height: 1.5;
+            color: var(--muted);
+        }
+
+
+        /*
+         * LOCATION SELECTOR
+         */
+
+        .location-list {
+            border-top: 2px solid var(--ink);
+        }
+
+        .location-choice {
+            display: block;
+            position: relative;
+            padding: 17px 45px 17px 16px;
+            background: var(--card);
+            border-left: 1px solid var(--line);
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            cursor: pointer;
+            transition:
+                background 120ms ease,
+                border-color 120ms ease,
+                transform 120ms ease;
+        }
+
+        .location-choice:hover {
+            background: #faf8ee;
+        }
+
+        .location-choice.selected {
+            background: #eff6db;
+            border-left: 5px solid var(--accent-dark);
+            padding-left: 12px;
+        }
+
+        .location-radio {
+            position: absolute;
+            top: 20px;
+            right: 16px;
+            width: 19px;
+            height: 19px;
+            accent-color: var(--accent-dark);
+        }
+
+        .location-name {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .location-short {
+            display: block;
+            color: var(--muted);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+
+        /*
+         * SELECTED LOCATION DETAILS
+         */
+
+        .location-details-panel {
+            min-height: 390px;
+            padding: 28px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            box-shadow: 5px 5px 0 #ded9cb;
+        }
+
+        .details-placeholder {
+            color: var(--muted);
+            font-size: 19px;
+            line-height: 1.6;
+        }
+
+        .details-city {
+            margin: 0 0 7px 0;
+            font-size: 38px;
+            line-height: 1;
+            font-weight: 500;
+        }
+
+        .details-area {
+            margin: 0 0 25px 0;
+            color: var(--muted);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        .details-table {
+            margin: 0;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 115px 1fr;
+            gap: 12px;
+            padding: 11px 0;
+            border-top: 1px solid var(--soft-line);
+        }
+
+        .detail-row dt {
+            margin: 0;
+            color: var(--muted);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .detail-row dd {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.45;
+        }
+
+
+        /*
+         * REGISTRATION
+         */
+
+        .registration {
+            margin-top: 48px;
+            padding-top: 34px;
+            border-top: 3px solid var(--ink);
+        }
+
+        .registration-heading {
+            margin: 0 0 8px 0;
+            font-size: 36px;
+            font-weight: 500;
+        }
+
+        .registration-note {
+            margin: 0 0 24px 0;
+            max-width: 710px;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .selected-location-message {
+            display: none;
+            max-width: 560px;
+            margin-bottom: 20px;
+            padding: 12px 15px;
+            background: #edf4d7;
+            border-left: 5px solid var(--accent-dark);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 7px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .email-input {
+            display: block;
+            width: min(100%, 500px);
+            padding: 13px 14px;
+            margin-bottom: 15px;
+            background: white;
+            border: 2px solid #aaa99f;
+            color: var(--ink);
+            font: 17px Arial, Helvetica, sans-serif;
+        }
+
+        .email-input:focus {
+            outline: 3px solid rgba(199, 227, 111, 0.5);
+            border-color: var(--accent-dark);
+        }
+
+        .submit-button {
+            padding: 14px 29px;
+            background: var(--ink);
+            color: white;
+            border: 2px solid var(--ink);
+            font: 800 15px Arial, Helvetica, sans-serif;
+            cursor: pointer;
+            transition:
+                background 120ms ease,
+                color 120ms ease,
+                transform 120ms ease;
+        }
+
+        .submit-button:hover {
+            background: var(--accent);
+            color: var(--ink);
+        }
+
+        .submit-button:active {
+            transform: translateY(1px);
+        }
+
+        .status {
+            min-height: 28px;
+            margin: 15px 0 0 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .status.error {
+            color: var(--warning);
+        }
+
+        .status.success {
+            color: #285a27;
+        }
+
+        .footer-note {
+            margin: 42px 0 0 0;
+            padding-top: 19px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+
+        /*
+         * MOBILE
+         */
+
+        @media (max-width: 760px) {
+
+            .page {
+                width: 100%;
+                margin: 0;
+                border-left: 0;
+                border-right: 0;
+                box-shadow: none;
+            }
+
+            .masthead {
+                padding: 29px 22px 27px 22px;
+            }
+
+            .content {
+                padding: 30px 22px 42px 22px;
+            }
+
+            h1 {
+                font-size: 49px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .event-summary {
+                grid-template-columns: 115px 1fr;
+            }
+
+            .location-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .location-details-panel {
+                min-height: 0;
+            }
+
+            .detail-row {
+                grid-template-columns: 88px 1fr;
+            }
+
+            .email-input {
+                width: 100%;
+            }
+
+            .submit-button {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <header class="masthead">
+
+        <p class="brand">
+            EigenAthens
+        </p>
+
+        <h1>
+            A Free Mathematics Lecture Series
+        </h1>
+
+        <p class="subtitle">
+            A sequence of informal public lectures developing a mathematical
+            problem from elementary ideas. No specialized mathematical
+            background is assumed. Questions and discussion are encouraged.
+        </p>
+
+        <span class="free-badge">
+            Free admission
+        </span>
+
+    </header>
+
+
+    <main class="content">
+
+
+        <!-- SHARED INFORMATION -->
+
+        <section>
+
+            <h2 class="section-title">
+                About the series
+            </h2>
+
+            <div class="event-summary">
+
+                <div class="summary-label">
+                    Format
+                </div>
+
+                <div class="summary-value">
+                    Approximately 90 minutes of lecture followed by questions
+                    and open discussion.
+                </div>
+
+
+                <div class="summary-label">
+                    Frequency
+                </div>
+
+                <div class="summary-value">
+                    Approximately twice per week.
+                </div>
+
+
+                <div class="summary-label">
+                    Meetings
+                </div>
+
+                <div class="summary-value">
+                    In person.
+                </div>
+
+
+                <div class="summary-label">
+                    Audience
+                </div>
+
+                <div class="summary-value">
+                    Open to the general public. The ideas will be developed
+                    progressively from introductory material.
+                </div>
+
+
+                <div class="summary-label">
+                    Admission
+                </div>
+
+                <div class="summary-value">
+                    Free. Registration is used only to estimate attendance and
+                    communicate schedule and venue information.
+                </div>
+
+
+                <div class="summary-label">
+                    Series span
+                </div>
+
+                <div class="summary-value">
+                    Beginning in early October 2026 and continuing across a
+                    sequence of meetings.
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- LOCATION SELECTION -->
+
+        <section>
+
+            <h2 class="section-title">
+                Choose a location
+            </h2>
+
+            <p class="location-intro">
+                Select the area where you would most likely attend. Details for
+                that location will appear beside the list.
+            </p>
+
+
+            <div class="location-layout">
+
+
+                <!-- LEFT: LOCATION LIST -->
+
+                <div class="location-list">
+
+
+                    <label
+                        class="location-choice"
+                        data-location="vancouver"
+                    >
+
+                        <input
+                            class="location-radio"
+                            type="radio"
+                            name="location"
+                            value="vancouver"
+                        >
+
+                        <span class="location-name">
+                            Vancouver
+                        </span>
+
+                        <span class="location-short">
+                            Downtown / Oakridge / central Vancouver
+                        </span>
+
+                    </label>
+
+
+
+                    <label
+                        class="location-choice"
+                        data-location="burnaby"
+                    >
+
+                        <input
+                            class="location-radio"
+                            type="radio"
+                            name="location"
+                            value="burnaby"
+                        >
+
+                        <span class="location-name">
+                            Burnaby
+                        </span>
+
+                        <span class="location-short">
+                            Metrotown / Brentwood / central Burnaby
+                        </span>
+
+                    </label>
+
+
+
+                    <label
+                        class="location-choice"
+                        data-location="coquitlam"
+                    >
+
+                        <input
+                            class="location-radio"
+                            type="radio"
+                            name="location"
+                            value="coquitlam"
+                        >
+
+                        <span class="location-name">
+                            Coquitlam
+                        </span>
+
+                        <span class="location-short">
+                            Town Centre / Tri-Cities
+                        </span>
+
+                    </label>
+
+
+
+                    <label
+                        class="location-choice"
+                        data-location="surrey"
+                    >
+
+                        <input
+                            class="location-radio"
+                            type="radio"
+                            name="location"
+                            value="surrey"
+                        >
+
+                        <span class="location-name">
+                            Surrey
+                        </span>
+
+                        <span class="location-short">
+                            Surrey Central / North Surrey
+                        </span>
+
+                    </label>
+
+
+
+                    <label
+                        class="location-choice"
+                        data-location="whiterock"
+                    >
+
+                        <input
+                            class="location-radio"
+                            type="radio"
+                            name="location"
+                            value="whiterock"
+                        >
+
+                        <span class="location-name">
+                            White Rock
+                        </span>
+
+                        <span class="location-short">
+                            White Rock / South Surrey
+                        </span>
+
+                    </label>
+
+
+
+                    <label
+                        class="location-choice"
+                        data-location="northvan"
+                    >
+
+                        <input
+                            class="location-radio"
+                            type="radio"
+                            name="location"
+                            value="northvan"
+                        >
+
+                        <span class="location-name">
+                            North Vancouver
+                        </span>
+
+                        <span class="location-short">
+                            Central Lonsdale / Lower Lonsdale
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+
+                <!-- RIGHT: DETAILS PANEL -->
+
+                <div
+                    class="location-details-panel"
+                    id="location-details-panel"
+                >
+
+                    <div
+                        class="details-placeholder"
+                        id="details-placeholder"
+                    >
+                        Select a location on the left to see its likely meeting
+                        days, time, venue area, and transit information.
+                    </div>
+
+
+                    <div
+                        id="details-content"
+                        hidden
+                    >
+
+                        <h3
+                            class="details-city"
+                            id="details-city"
+                        >
+                        </h3>
+
+                        <p
+                            class="details-area"
+                            id="details-area"
+                        >
+                        </p>
+
+
+                        <dl class="details-table">
+
+                            <div class="detail-row">
+                                <dt>Days</dt>
+                                <dd id="details-days"></dd>
+                            </div>
+
+                            <div class="detail-row">
+                                <dt>Time</dt>
+                                <dd id="details-time"></dd>
+                            </div>
+
+                            <div class="detail-row">
+                                <dt>Venue</dt>
+                                <dd id="details-venue"></dd>
+                            </div>
+
+                            <div class="detail-row">
+                                <dt>Transit</dt>
+                                <dd id="details-transit"></dd>
+                            </div>
+
+                            <div class="detail-row">
+                                <dt>Status</dt>
+                                <dd id="details-status"></dd>
+                            </div>
+
+                        </dl>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ONE REGISTRATION FORM -->
+
+        <section class="registration">
+
+            <h2 class="registration-heading">
+                Register your interest
+            </h2>
+
+            <p class="registration-note">
+                Choose one location above, then enter your email address.
+                Venue and scheduling information can be sent once arrangements
+                are confirmed.
+            </p>
+
+
+            <div
+                class="selected-location-message"
+                id="selected-location-message"
+            >
+            </div>
+
+
+            <form id="registration-form">
+
+                <label
+                    class="field-label"
+                    for="email"
+                >
+                    Email address
+                </label>
+
+                <input
+                    class="email-input"
+                    id="email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="you@example.com"
+                    required
+                >
+
+
+                <button
+                    class="submit-button"
+                    type="submit"
+                >
+                    Register
+                </button>
+
+
+                <p
+                    class="status"
+                    id="status"
+                >
+                </p>
+
+            </form>
+
+        </section>
+
+
+        <p class="footer-note">
+            Registration indicates interest only. It does not require payment
+            and does not commit you to attend. Location, schedule, and venue
+            information may be refined as rooms are confirmed.
+        </p>
+
+    </main>
+
+</div>
+
+
+
+<script>
+
+    /*
+     * Normally this information could come from events.json.
+     *
+     * It is hard-coded here only so this single HTML file can
+     * demonstrate the full UX by itself.
+     */
+
+    var locations = {
+
+        vancouver: {
+            name: "Vancouver",
+            area: "Downtown / Oakridge / central Vancouver",
+            days: "Likely weekday evenings; exact days to be confirmed.",
+            time: "Approximately 7:00 PM to 8:30 PM.",
+            venue: "TBD. Likely Vancouver Public Library Central Branch, Oakridge area, or another central meeting room.",
+            transit: "A venue near rapid transit will be strongly preferred.",
+            status: "Location under consideration."
+        },
+
+        burnaby: {
+            name: "Burnaby",
+            area: "Metrotown / Brentwood / central Burnaby",
+            days: "Likely weekday evenings, approximately twice per week.",
+            time: "Evening.",
+            venue: "TBD. Likely a Burnaby library, community centre, or meeting room near Metrotown or Brentwood.",
+            transit: "Preference for a venue within walking distance of SkyTrain.",
+            status: "Location under consideration."
+        },
+
+        coquitlam: {
+            name: "Coquitlam",
+            area: "Coquitlam Town Centre / Tri-Cities",
+            days: "Likely one or two weekday evenings.",
+            time: "Evening.",
+            venue: "TBD. Likely near Coquitlam Centre, City Centre Aquatic Complex, or another public meeting space.",
+            transit: "Preference for a location close to the Millennium Line.",
+            status: "Interest is currently being measured."
+        },
+
+        surrey: {
+            name: "Surrey",
+            area: "Surrey Central / North Surrey",
+            days: "Likely weekday evenings or weekend afternoon.",
+            time: "To be determined from participant availability.",
+            venue: "TBD. Likely near Surrey Central Library or another central public venue.",
+            transit: "Preference for a location near Surrey Central Station.",
+            status: "Interest is currently being measured."
+        },
+
+        whiterock: {
+            name: "White Rock",
+            area: "White Rock / South Surrey",
+            days: "Likely one or two evenings per week.",
+            time: "Evening.",
+            venue: "TBD. Likely a White Rock community centre, library, or nearby public meeting room.",
+            transit: "Parking and major bus access will be considered when choosing the room.",
+            status: "Possible location depending on attendance."
+        },
+
+        northvan: {
+            name: "North Vancouver",
+            area: "Central Lonsdale / Lower Lonsdale",
+            days: "Likely weekday evening meetings.",
+            time: "Evening.",
+            venue: "TBD. Likely a North Vancouver library, community centre, or Lower Lonsdale meeting room.",
+            transit: "Preference for easy SeaBus and bus access.",
+            status: "Possible location depending on attendance."
+        }
+
+    };
+
+
+    var selectedLocation = null;
+
+
+
+    function clearSelectedCards()
+    {
+        var cards;
+        var i;
+
+        cards =
+            document.querySelectorAll(
+                ".location-choice"
+            );
+
+        for (i = 0; i < cards.length; i++)
+        {
+            cards[i].classList.remove(
+                "selected"
+            );
+        }
+    }
+
+
+
+    function showLocationDetails(locationId)
+    {
+        var location;
+        var placeholder;
+        var content;
+
+        location =
+            locations[locationId];
+
+
+        if (location == null)
+        {
+            return;
+        }
+
+
+        placeholder =
+            document.getElementById(
+                "details-placeholder"
+            );
+
+        content =
+            document.getElementById(
+                "details-content"
+            );
+
+
+        placeholder.hidden =
+            true;
+
+        content.hidden =
+            false;
+
+
+        document.getElementById(
+            "details-city"
+        ).textContent =
+            location.name;
+
+
+        document.getElementById(
+            "details-area"
+        ).textContent =
+            location.area;
+
+
+        document.getElementById(
+            "details-days"
+        ).textContent =
+            location.days;
+
+
+        document.getElementById(
+            "details-time"
+        ).textContent =
+            location.time;
+
+
+        document.getElementById(
+            "details-venue"
+        ).textContent =
+            location.venue;
+
+
+        document.getElementById(
+            "details-transit"
+        ).textContent =
+            location.transit;
+
+
+        document.getElementById(
+            "details-status"
+        ).textContent =
+            location.status;
+    }
+
+
+
+    function locationChanged(event)
+    {
+        var radio;
+        var card;
+        var location;
+        var selectedMessage;
+        var status;
+
+        radio =
+            event.currentTarget;
+
+        selectedLocation =
+            radio.value;
+
+        location =
+            locations[selectedLocation];
+
+
+        clearSelectedCards();
+
+
+        card =
+            radio.closest(
+                ".location-choice"
+            );
+
+        card.classList.add(
+            "selected"
+        );
+
+
+        showLocationDetails(
+            selectedLocation
+        );
+
+
+        selectedMessage =
+            document.getElementById(
+                "selected-location-message"
+            );
+
+
+        selectedMessage.textContent =
+            "Selected location: " +
+            location.name;
+
+        selectedMessage.style.display =
+            "block";
+
+
+        status =
+            document.getElementById(
+                "status"
+            );
+
+        status.textContent = "";
+        status.className = "status";
+    }
+
+
+
+    function registrationSubmitted(event)
+    {
+        var email;
+        var status;
+        var location;
+
+        event.preventDefault();
+
+
+        status =
+            document.getElementById(
+                "status"
+            );
+
+
+        if (selectedLocation == null)
+        {
+            status.textContent =
+                "Please select a location before registering.";
+
+            status.className =
+                "status error";
+
+            return;
+        }
+
+
+        email =
+            document.getElementById(
+                "email"
+            );
+
+
+        if (!email.checkValidity())
+        {
+            email.reportValidity();
+
+            status.textContent =
+                "Please enter a valid email address.";
+
+            status.className =
+                "status error";
+
+            return;
+        }
+
+
+        location =
+            locations[selectedLocation];
+
+
+        /*
+         * Demonstration only.
+         *
+         * Later this is where you can start your
+         * XMLHttpRequest POST to Apps Script.
+         */
+
+        status.textContent =
+            "Ready to register for " +
+            location.name +
+            ".";
+
+        status.className =
+            "status success";
+
+
+        console.log(
+            "location:",
+            selectedLocation
+        );
+
+        console.log(
+            "email:",
+            email.value
+        );
+    }
+
+
+
+    function installEventHandlers()
+    {
+        var radios;
+        var form;
+        var i;
+
+        radios =
+            document.querySelectorAll(
+                ".location-radio"
+            );
+
+
+        for (i = 0; i < radios.length; i++)
+        {
+            radios[i].addEventListener(
+                "change",
+                locationChanged
+            );
+        }
+
+
+        form =
+            document.getElementById(
+                "registration-form"
+            );
+
+        form.addEventListener(
+            "submit",
+            registrationSubmitted
+        );
+    }
+
+
+
+    installEventHandlers();
+
+</script>
+
+</body>
+
+</html>
