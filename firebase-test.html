@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Firebase Email Test</title>
+
+
+    <style>
+
+        /*
+         * None of this CSS has anything to do with Firebase.
+         *
+         * It is only here so the experiment is pleasant to use.
+         */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f4f2eb;
+
+            color: #172018;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+
+        main {
+            width: min(600px, calc(100% - 40px));
+
+            background: white;
+
+            border: 1px solid #d8d8d0;
+
+            border-radius: 16px;
+
+            padding: 36px;
+        }
+
+
+        h1 {
+            margin-top: 0;
+        }
+
+
+        p {
+            line-height: 1.6;
+        }
+
+
+        label {
+            display: block;
+
+            margin-top: 24px;
+            margin-bottom: 8px;
+
+            font-weight: bold;
+        }
+
+
+        input {
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #aaa;
+            border-radius: 8px;
+
+            font-size: 16px;
+        }
+
+
+        button {
+            margin-top: 16px;
+
+            padding: 13px 20px;
+
+            border: 0;
+            border-radius: 8px;
+
+            background: #172018;
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+
+        #status {
+            margin-top: 24px;
+
+            padding: 16px;
+
+            background: #f4f4f0;
+
+            border-radius: 8px;
+
+            white-space: pre-wrap;
+        }
+
+
+        #authenticated {
+            display: none;
+
+            margin-top: 24px;
+
+            padding: 18px;
+
+            border: 1px solid #999;
+
+            border-radius: 8px;
+        }
+
+
+        #authenticated pre {
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<main>
+
+    <h1>Firebase Email Authentication Test</h1>
+
+
+    <p id="instructions">
+
+        Enter your email address.
+
+        Firebase will send you a sign-in link.
+
+    </p>
+
+
+    <form id="emailForm">
+
+        <label for="email">
+            Email address
+        </label>
+
+        <input
+            id="email"
+            type="email"
+            required
+            autocomplete="email"
+        >
+
+        <button
+            id="submitButton"
+            type="submit"
+        >
+            Send verification link
+        </button>
+
+    </form>
+
+
+    <div id="status">
+        Ready.
+    </div>
+
+
+    <div id="authenticated">
+
+        <h2>Authentication succeeded</h2>
+
+        <pre id="userInformation"></pre>
+
+    </div>
+
+
+</main>
+
+
+
+<script type="module">
+
+
+/*
+ * ================================================================
+ * FIREBASE LIBRARIES
+ * ================================================================
+ *
+ * These files come from Google's CDN.
+ *
+ * firebase-app.js contains the basic Firebase application machinery.
+ *
+ * firebase-auth.js contains the Authentication machinery that we need.
+ *
+ * We are NOT loading:
+ *
+ *      Firestore
+ *      Analytics
+ *      App Check
+ *      Storage
+ *
+ * yet.
+ *
+ * This experiment is Authentication only.
+ */
+
+
+import {
+    initializeApp
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+
+import {
+    getAuth,
+    sendSignInLinkToEmail,
+    isSignInWithEmailLink,
+    signInWithEmailLink
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+
+
+/*
+ * ================================================================
+ * YOUR FIREBASE CONFIGURATION
+ * ================================================================
+ *
+ * REPLACE THIS ENTIRE OBJECT with the firebaseConfig object
+ * that you copied from the Firebase console.
+ *
+ * It will look approximately like this.
+ *
+ * The Firebase web configuration is NOT treated as a secret
+ * credential. It identifies/configures the Firebase project for
+ * this web application.
+ */
+
+
+var firebaseConfig = {
+    apiKey: "AIzaSyArS_WZfnfrwQkz6d5ZOYmYay0CjUxtg1U",
+    authDomain: "eigenathens-44eff.firebaseapp.com",
+    projectId: "eigenathens-44eff",
+    storageBucket: "eigenathens-44eff.firebasestorage.app",
+    messagingSenderId: "420666659405",
+    appId: "1:420666659405:web:a78bce627e4b22ae8ac204",
+    measurementId: "G-631X8HZ358"
+  };
+
+
+
+/*
+ * ================================================================
+ * INITIALIZE FIREBASE
+ * ================================================================
+ *
+ * initializeApp() creates a JavaScript-side Firebase App object.
+ *
+ * It does NOT authenticate anybody.
+ *
+ * Think of this as:
+ *
+ *      "This web page will be talking to Firebase project X."
+ */
+
+
+var app;
+
+app =
+    initializeApp(
+        firebaseConfig
+    );
+
+
+
+/*
+ * getAuth() gives our JavaScript a handle to Firebase
+ * Authentication associated with that Firebase app.
+ */
+
+
+var auth;
+
+auth =
+    getAuth(
+        app
+    );
+
+
+
+/*
+ * ================================================================
+ * GET REFERENCES TO OUR HTML ELEMENTS
+ * ================================================================
+ */
+
+
+var emailForm;
+var emailInput;
+var submitButton;
+var statusBox;
+var instructions;
+var authenticatedBox;
+var userInformation;
+
+
+emailForm =
+    document.getElementById(
+        "emailForm"
+    );
+
+
+emailInput =
+    document.getElementById(
+        "email"
+    );
+
+
+submitButton =
+    document.getElementById(
+        "submitButton"
+    );
+
+
+statusBox =
+    document.getElementById(
+        "status"
+    );
+
+
+instructions =
+    document.getElementById(
+        "instructions"
+    );
+
+
+authenticatedBox =
+    document.getElementById(
+        "authenticated"
+    );
+
+
+userInformation =
+    document.getElementById(
+        "userInformation"
+    );
+
+
+
+/*
+ * We use this variable while a send operation is in progress.
+ *
+ * It only exists in this JavaScript execution.
+ */
+
+
+var pendingEmail;
+
+pendingEmail = null;
+
+
+
+/*
+ * This tells us which job the form is currently performing.
+ *
+ * Normally:
+ *
+ *      mode = "SEND"
+ *
+ * After an email link is opened in a different browser and
+ * Firebase needs us to ask for the email again:
+ *
+ *      mode = "COMPLETE"
+ */
+
+
+var mode;
+
+mode = "SEND";
+
+
+
+/*
+ * ================================================================
+ * FIRST HALF OF THE AUTHENTICATION FLOW
+ *
+ * USER SUBMITS EMAIL
+ * ================================================================
+ */
+
+
+function formSubmitted(event)
+{
+    var email;
+    var actionCodeSettings;
+
+
+    /*
+     * Stop the browser's ordinary HTML form submission.
+     *
+     * We want JavaScript/Firebase to perform the network request.
+     */
+
+    event.preventDefault();
+
+
+    /*
+     * Let the browser perform its ordinary HTML email-field
+     * validation first.
+     */
+
+    if (!emailInput.checkValidity())
+    {
+        emailInput.reportValidity();
+
+        return;
+    }
+
+
+    email =
+        emailInput.value.trim();
+
+
+    /*
+     * If we're in COMPLETE mode, we are NOT requesting another
+     * email.
+     *
+     * We are completing authentication using the email link
+     * already present in window.location.href.
+     */
+
+    if (mode == "COMPLETE")
+    {
+        completeAuthentication(
+            email
+        );
+
+        return;
+    }
+
+
+    /*
+     * ------------------------------------------------------------
+     * ActionCodeSettings
+     * ------------------------------------------------------------
+     *
+     * Firebase needs to know where the email link should eventually
+     * send the browser.
+     *
+     * Suppose this file is:
+     *
+     *      https://eigenathens.org/firebase-test.html
+     *
+     * Then:
+     *
+     *      window.location.origin
+     *
+     * is:
+     *
+     *      https://eigenathens.org
+     *
+     * and:
+     *
+     *      window.location.pathname
+     *
+     * is:
+     *
+     *      /firebase-test.html
+     *
+     * So returnUrl becomes:
+     *
+     *      https://eigenathens.org/firebase-test.html
+     *
+     *
+     * IMPORTANT:
+     *
+     * eigenathens.org must be in Firebase Authentication's
+     * Authorized domains list.
+     */
+
+
+    var returnUrl;
+
+    returnUrl =
+        window.location.origin +
+        window.location.pathname;
+
+
+    actionCodeSettings = {
+
+        url: returnUrl,
+
+        /*
+         * Firebase requires this to be true for email-link sign-in.
+         *
+         * It means that after the user follows the email link,
+         * our web application completes the sign-in operation.
+         */
+
+        handleCodeInApp: true
+    };
+
+
+    /*
+     * Keep the email around until Firebase tells us whether
+     * requesting the link worked.
+     */
+
+    pendingEmail =
+        email;
+
+
+    submitButton.disabled =
+        true;
+
+
+    statusBox.textContent =
+        "Requesting an authentication email from Firebase...";
+
+
+    /*
+     * ============================================================
+     * IMPORTANT NETWORK OPERATION
+     * ============================================================
+     *
+     * This eventually causes the browser to make an HTTPS POST
+     * to Google's Firebase Authentication infrastructure.
+     *
+     * Roughly speaking, we're asking:
+     *
+     *      Firebase project X:
+     *
+     *      Please generate an EMAIL_SIGNIN credential for
+     *
+     *          alice@example.com
+     *
+     *      and email it to that address.
+     *
+     * We are NOT constructing the HTTP request ourselves.
+     *
+     * Firebase's browser SDK does that.
+     *
+     * The function returns a Promise.
+     *
+     * We deliberately use ordinary named callback functions below,
+     * rather than async/await or arrow functions.
+     */
+
+
+    sendSignInLinkToEmail(
+        auth,
+        email,
+        actionCodeSettings
+    )
+    .then(
+        emailLinkSent
+    )
+    .catch(
+        emailLinkFailed
+    );
+}
+
+
+
+/*
+ * Firebase successfully accepted our request to send the link.
+ */
+
+
+function emailLinkSent()
+{
+    /*
+     * Save the email in this browser.
+     *
+     * Why?
+     *
+     * Firebase requires BOTH:
+     *
+     *      the email link
+     *
+     * AND
+     *
+     *      the corresponding email address
+     *
+     * when authentication is completed.
+     *
+     * If the user opens the email link in this same browser,
+     * we can recover the address automatically.
+     */
+
+
+    window.localStorage.setItem(
+        "emailForSignIn",
+        pendingEmail
+    );
+
+
+    statusBox.textContent =
+        "Firebase accepted the request.\n\n" +
+        "A sign-in link should arrive at:\n\n" +
+        pendingEmail +
+        "\n\nOpen the email and click the link.";
+
+
+    submitButton.disabled =
+        false;
+
+
+    pendingEmail =
+        null;
+}
+
+
+
+/*
+ * Firebase rejected the request or some other error occurred.
+ */
+
+
+function emailLinkFailed(error)
+{
+    statusBox.textContent =
+        "Firebase returned an error.\n\n" +
+        "Code: " +
+        error.code +
+        "\n\n" +
+        "Message: " +
+        error.message;
+
+
+    submitButton.disabled =
+        false;
+
+
+    pendingEmail =
+        null;
+}
+
+
+
+/*
+ * ================================================================
+ * SECOND HALF OF THE AUTHENTICATION FLOW
+ *
+ * USER HAS CLICKED THE EMAIL LINK
+ * ================================================================
+ */
+
+
+function inspectCurrentUrl()
+{
+    var storedEmail;
+
+
+    /*
+     * Firebase examines the current URL.
+     *
+     * If this URL contains one of Firebase's email sign-in
+     * credentials, this returns true.
+     */
+
+
+    if (
+        !isSignInWithEmailLink(
+            auth,
+            window.location.href
+        )
+    )
+    {
+        /*
+         * Ordinary page visit.
+         *
+         * There is no authentication code in the URL.
+         */
+
+        return;
+    }
+
+
+    /*
+     * We arrived through an email authentication link.
+     */
+
+
+    statusBox.textContent =
+        "Firebase sign-in link detected.";
+
+
+    /*
+     * Look for the email stored by the browser which originally
+     * requested the link.
+     */
+
+
+    storedEmail =
+        window.localStorage.getItem(
+            "emailForSignIn"
+        );
+
+
+    if (storedEmail)
+    {
+        /*
+         * Same browser (or browser storage shared with the original
+         * page).
+         *
+         * We already know which email the user entered earlier.
+         *
+         * Try to finish authentication immediately.
+         */
+
+
+        emailInput.value =
+            storedEmail;
+
+
+        completeAuthentication(
+            storedEmail
+        );
+
+
+        return;
+    }
+
+
+    /*
+     * ------------------------------------------------------------
+     * DIFFERENT BROWSER / DIFFERENT DEVICE
+     * ------------------------------------------------------------
+     *
+     * Example:
+     *
+     * Original registration:
+     *
+     *      Chrome
+     *
+     * Email link opens in:
+     *
+     *      Firefox
+     *
+     * Firefox cannot read Chrome's localStorage.
+     *
+     * Firebase therefore requires us to ask the person for the
+     * email address again.
+     */
+
+
+    mode =
+        "COMPLETE";
+
+
+    instructions.textContent =
+        "You opened a Firebase authentication link, but this browser " +
+        "does not know which email requested it. Enter the same email " +
+        "address again to complete authentication.";
+
+
+    submitButton.textContent =
+        "Complete authentication";
+
+
+    statusBox.textContent =
+        "Authentication link detected.\n\n" +
+        "Enter the email address that received this link.";
+}
+
+
+
+/*
+ * ================================================================
+ * COMPLETE AUTHENTICATION
+ * ================================================================
+ */
+
+
+function completeAuthentication(email)
+{
+    submitButton.disabled =
+        true;
+
+
+    statusBox.textContent =
+        "Sending the email address and the one-time email-link " +
+        "credential to Firebase for verification...";
+
+
+    /*
+     * This is the decisive authentication operation.
+     *
+     * Firebase receives:
+     *
+     *      1. email
+     *
+     *      2. the current URL containing Firebase's one-time code
+     *
+     * Google's backend checks that the code is genuine, valid,
+     * unexpired and associated with this email address.
+     */
+
+
+    signInWithEmailLink(
+        auth,
+        email,
+        window.location.href
+    )
+    .then(
+        authenticationSucceeded
+    )
+    .catch(
+        authenticationFailed
+    );
+}
+
+
+
+/*
+ * ================================================================
+ * AUTHENTICATION SUCCEEDED
+ * ================================================================
+ */
+
+
+function authenticationSucceeded(result)
+{
+    var user;
+    var text;
+
+
+    user =
+        result.user;
+
+
+    /*
+     * The email-link authentication has now succeeded.
+     *
+     * Firebase has authenticated this browser as a Firebase user.
+     *
+     * result.user contains the identity Firebase gives us.
+     */
+
+
+    window.localStorage.removeItem(
+        "emailForSignIn"
+    );
+
+
+    text =
+        "Email: " +
+        user.email +
+        "\n\n" +
+
+        "Firebase UID: " +
+        user.uid +
+        "\n\n" +
+
+        "Email verified: " +
+        user.emailVerified;
+
+
+    userInformation.textContent =
+        text;
+
+
+    authenticatedBox.style.display =
+        "block";
+
+
+    statusBox.textContent =
+        "SUCCESS.\n\n" +
+        "Firebase authenticated the email-link credential.";
+
+
+    /*
+     * We don't need the original form anymore for this experiment.
+     */
+
+
+    emailForm.style.display =
+        "none";
+
+
+    instructions.textContent =
+        "The Firebase email-link authentication experiment worked.";
+}
+
+
+
+/*
+ * Authentication link/email did not validate.
+ */
+
+
+function authenticationFailed(error)
+{
+    statusBox.textContent =
+        "Authentication failed.\n\n" +
+        "Code: " +
+        error.code +
+        "\n\n" +
+        "Message: " +
+        error.message;
+
+
+    submitButton.disabled =
+        false;
+}
+
+
+
+/*
+ * ================================================================
+ * INSTALL EVENT HANDLER
+ * ================================================================
+ */
+
+
+emailForm.addEventListener(
+    "submit",
+    formSubmitted
+);
+
+
+
+/*
+ * ================================================================
+ * PAGE STARTUP
+ * ================================================================
+ *
+ * Every time this page loads, check whether it was loaded normally
+ * or as the destination of a Firebase email sign-in link.
+ */
+
+
+inspectCurrentUrl();
+
+
+</script>
+
+
+</body>
+
+</html>
