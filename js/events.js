@@ -56,49 +56,60 @@ const EVENTS = [
   }
 ];
 
-function makeEventCard(event) {
+function makeEventCard() {
   const article = document.createElement("article");
   article.className = "event-card";
-  article.id = `event-${event.slug}`;
-  article.dataset.location = event.slug;
-
+  article.id = "event-geometry-of-number";
   article.innerHTML = `
     <div class="event-row">
-      <img class="event-poster" src="../assets/talk-poster.jpg" alt="Poster for The Geometry of Number">
-
+      <img class="event-poster" src="/assets/talk-poster.jpg" alt="Poster for The Geometry of Number">
       <div>
-        <div class="event-eyebrow">Same talk · ${escapeHtml(event.location)}</div>
+        <div class="event-eyebrow">Free mathematics talk · Multiple locations</div>
         <h2 class="event-title">The Geometry of Number</h2>
         <div class="event-meta">
-          <span><strong>${escapeHtml(event.location)}</strong></span>
-          <span>${escapeHtml(event.date)}</span>
-          <span>${escapeHtml(event.time)}</span>
-          <span>${escapeHtml(event.venue)}</span>
+          <span>October 16–24, 2026</span>
+          <span>7:00–9:00 PM</span>
         </div>
       </div>
-
-      <button class="register-button" type="button" aria-expanded="false">
+      <button class="register-button" type="button" aria-expanded="false" aria-controls="event-registration">
         Register
       </button>
     </div>
-
-    <div class="registration-panel" aria-hidden="true">
-      <h3>Register — ${escapeHtml(event.location)}</h3>
-      <p>
-        Registration is handled by Google Forms. Google may ask you to sign in.
-        Submission and validation messages appear inside the form.
-      </p>
-      <div class="frame-container"></div>
+    <div id="event-registration" class="registration-panel" hidden>
+      <h3 id="location-heading">Choose your location</h3>
+      <p>Select a location to open its registration form.</p>
+      <div class="location-options" role="group" aria-labelledby="location-heading"></div>
+      <div class="selected-registration" hidden>
+        <h3 class="registration-title" aria-live="polite"></h3>
+        <p>Registration is handled by Google Forms. Google may ask you to sign in.</p>
+        <div class="frame-container"></div>
+      </div>
     </div>
   `;
 
-  const button = article.querySelector(".register-button");
-  button.addEventListener("click", function () {
-    const currentlyOpen = article.querySelector(".registration-panel").classList.contains("open");
-    closeAllForms();
-    if (!currentlyOpen) openForm(article, event, true);
+  const options = article.querySelector(".location-options");
+  EVENTS.forEach(function (event) {
+    const option = document.createElement("button");
+    option.type = "button";
+    option.className = "location-option";
+    option.dataset.location = event.slug;
+    option.setAttribute("aria-pressed", "false");
+    option.innerHTML = `
+      <strong>${escapeHtml(event.location)}</strong>
+      <span>${escapeHtml(event.date)} · ${escapeHtml(event.time)}</span>
+      <span>${escapeHtml(event.venue)}</span>
+    `;
+    option.addEventListener("click", function () {
+      selectLocation(article, event);
+    });
+    options.appendChild(option);
   });
 
+  const button = article.querySelector(".register-button");
+  button.addEventListener("click", function () {
+    const panel = article.querySelector(".registration-panel");
+    setRegistrationOpen(article, panel.hidden);
+  });
   return article;
 }
 
@@ -111,60 +122,46 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function closeAllForms() {
-  document.querySelectorAll(".event-card").forEach(function (card) {
-    const panel = card.querySelector(".registration-panel");
-    const button = card.querySelector(".register-button");
-    panel.classList.remove("open");
-    panel.setAttribute("aria-hidden", "true");
-    button.setAttribute("aria-expanded", "false");
-    button.textContent = "Register";
-  });
+function setRegistrationOpen(card, open) {
+  const panel = card.querySelector(".registration-panel");
+  const button = card.querySelector(".register-button");
+  panel.hidden = !open;
+  button.setAttribute("aria-expanded", String(open));
+  button.textContent = open ? "Close registration" : "Register";
 }
 
-function openForm(card, event, userInitiated) {
-  const panel = card.querySelector(".registration-panel");
+function selectLocation(card, event) {
   const container = card.querySelector(".frame-container");
-  const button = card.querySelector(".register-button");
-
-  if (!container.querySelector("iframe")) {
+  // Keep the current form intact when its location is selected again.
+  if (card.dataset.location !== event.slug) {
     const iframe = document.createElement("iframe");
     iframe.className = "google-form-frame";
     iframe.src = event.googleFormUrl;
     iframe.title = `Google registration form for ${event.location}`;
-    iframe.loading = "lazy";
-    container.appendChild(iframe);
+    container.replaceChildren(iframe);
+    card.dataset.location = event.slug;
   }
-
-  panel.classList.add("open");
-  panel.setAttribute("aria-hidden", "false");
-  button.setAttribute("aria-expanded", "true");
-  button.textContent = "Close form";
-
-  if (!userInitiated) {
-    card.scrollIntoView({ block: "start" });
-  }
+  card.querySelectorAll(".location-option").forEach(function (option) {
+    option.setAttribute("aria-pressed", String(option.dataset.location === event.slug));
+  });
+  card.querySelector(".registration-title").textContent = `Register — ${event.location}`;
+  card.querySelector(".selected-registration").hidden = false;
+  setRegistrationOpen(card, true);
 }
 
 function renderEvents() {
   const list = document.getElementById("events-list");
-  EVENTS.forEach(function (event) {
-    list.appendChild(makeEventCard(event));
-  });
+  const card = makeEventCard();
+  list.replaceChildren(card);
 
-  // Ad/deep-link behavior. Example:
-  // https://eigenathens.org/events/?location=coquitlam
+  // Preserve location-specific ad links and load only the selected form.
   const location = new URLSearchParams(window.location.search).get("location");
-  if (!location) return;
-
   const event = EVENTS.find(function (item) {
     return item.slug === location;
   });
-
   if (!event) return;
-
-  const card = document.getElementById(`event-${event.slug}`);
-  openForm(card, event, false);
+  selectLocation(card, event);
+  card.scrollIntoView({ block: "start" });
 }
 
 document.addEventListener("DOMContentLoaded", renderEvents);

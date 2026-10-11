@@ -205,15 +205,53 @@ img { display: block; max-width: 100%; }
 .register-button[aria-expanded="true"] { background: #4e574f; }
 
 .registration-panel {
-  display: none;
   border-top: 1px solid var(--line);
   background: #fbfaf6;
   padding: 22px;
 }
 
-.registration-panel.open { display: block; }
+[hidden] { display: none !important; }
 .registration-panel h3 { margin: 0 0 5px; }
 .registration-panel p { margin: 0 0 16px; color: var(--muted); }
+
+.location-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 12px;
+}
+
+.location-option {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.location-option span { color: var(--muted); font-size: .85rem; }
+.location-option:hover { border-color: var(--ink); }
+.location-option[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--accent);
+}
+
+.location-option:focus-visible,
+.register-button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.selected-registration {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
 
 .google-form-frame {
   width: 100%;
