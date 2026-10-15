@@ -1,68 +1,25 @@
 {
   "talk-series": [
     {
-      "id": "geometry-of-number",
-      "title": "The Geometry of Number",
+      "id": "1",
+      "title": "Mathematics: \"Useless Knowledge\", Mortal Stakes",
       "description": "A public mathematics talk exploring the geometry of number. Choose a timezone region to register for this talk.",
-      "poster": "/assets/talk-poster.jpg",
+      "poster": "/assets/poster-vertical.jpg",
       "tz-regions": [
         {
-          "id": "vancouver",
-          "name": "Pacific \u2014 Vancouver",
+          "id": "1",
+          "name": "Pacific Time",
           "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_VANCOUVER/viewform?embedded=true"
         },
         {
-          "id": "burnaby",
-          "name": "Pacific \u2014 Burnaby",
+          "id": "2",
+          "name": "Eastern Time",
           "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_BURNABY/viewform?embedded=true"
         },
         {
-          "id": "coquitlam",
-          "name": "Pacific \u2014 Coquitlam",
+          "id": "3",
+          "name": "Indian Standard Time",
           "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_COQUITLAM/viewform?embedded=true"
-        },
-        {
-          "id": "surrey",
-          "name": "Pacific \u2014 Surrey",
-          "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_SURREY/viewform?embedded=true"
-        },
-        {
-          "id": "white-rock",
-          "name": "Pacific \u2014 White Rock",
-          "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_WHITE_ROCK/viewform?embedded=true"
-        }
-      ]
-    },
-    {
-      "id": "continuum",
-      "title": "continuum",
-      "description": "A public mathematics talk exploring the geometry of number. Choose a timezone region to register for this talk.",
-      "poster": "/assets/talk-poster.jpg",
-      "tz-regions": [
-        {
-          "id": "vancouver",
-          "name": "Pacific \u2014 Vancouver",
-          "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_VANCOUVER/viewform?embedded=true"
-        },
-        {
-          "id": "burnaby",
-          "name": "Pacific \u2014 Burnaby",
-          "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_BURNABY/viewform?embedded=true"
-        },
-        {
-          "id": "coquitlam",
-          "name": "Pacific \u2014 Coquitlam",
-          "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_COQUITLAM/viewform?embedded=true"
-        },
-        {
-          "id": "surrey",
-          "name": "Pacific \u2014 Surrey",
-          "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_SURREY/viewform?embedded=true"
-        },
-        {
-          "id": "white-rock",
-          "name": "Pacific \u2014 White Rock",
-          "googleFormUrl": "https://docs.google.com/forms/d/e/EXAMPLE_WHITE_ROCK/viewform?embedded=true"
         }
       ]
     }
