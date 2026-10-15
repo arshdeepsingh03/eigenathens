@@ -148,42 +148,24 @@ img { display: block; max-width: 100%; }
 
 .event-row {
   display: grid;
-  grid-template-columns: 112px 1fr auto;
-  gap: 22px;
-  align-items: center;
-  padding: 20px;
+  grid-template-columns: minmax(250px, 300px) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  padding: 24px;
 }
 
 .event-poster {
-  width: 112px;
-  aspect-ratio: 9 / 16;
-  object-fit: cover;
+  width: 100%;
+  height: auto;
   border-radius: 10px;
   border: 1px solid var(--line);
 }
 
-.event-eyebrow {
-  margin: 0 0 4px;
-  color: var(--muted);
-  font-size: .78rem;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  font-weight: 800;
-}
-
-.event-title {
-  margin: 0 0 8px;
-  font-size: clamp(1.25rem, 3vw, 1.7rem);
-  letter-spacing: -.03em;
-}
-
-.event-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px 18px;
-  color: var(--muted);
-  font-size: .95rem;
-}
+.event-details { min-width: 0; padding: 8px 0; }
+.section .event-title { margin: 0 0 16px; font-size: clamp(1.8rem, 3.5vw, 2.8rem); line-height: 1.1; }
+.event-description { margin: 0 0 24px; color: var(--muted); font-size: 1.05rem; }
+.timezone-picker { margin-top: 28px; }
+.timezone-picker h3 { margin: 0 0 14px; font-size: 1rem; }
 
 .register-button,
 .secondary-button {
@@ -214,16 +196,17 @@ img { display: block; max-width: 100%; }
 .registration-panel h3 { margin: 0 0 5px; }
 .registration-panel p { margin: 0 0 16px; color: var(--muted); }
 
-.location-options {
+.timezone-options {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
   gap: 12px;
 }
 
-.location-option {
+.timezone-option {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
   padding: 16px;
   border: 2px solid var(--line);
   border-radius: 12px;
@@ -234,23 +217,16 @@ img { display: block; max-width: 100%; }
   cursor: pointer;
 }
 
-.location-option span { color: var(--muted); font-size: .85rem; }
-.location-option:hover { border-color: var(--ink); }
-.location-option[aria-pressed="true"] {
+.timezone-option:hover { border-color: var(--ink); }
+.timezone-option[aria-pressed="true"] {
   border-color: var(--ink);
   background: var(--accent);
 }
 
-.location-option:focus-visible,
+.timezone-option:focus-visible,
 .register-button:focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 3px;
-}
-
-.selected-registration {
-  margin-top: 24px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
 }
 
 .google-form-frame {
@@ -282,14 +258,14 @@ footer {
   .home-grid { grid-template-columns: 1fr; }
 
   .event-row {
-    grid-template-columns: 82px 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 16px;
     align-items: start;
   }
 
-  .event-poster { width: 82px; }
+  .event-row { padding: 18px; }
+  .event-poster { width: min(100%, 420px); justify-self: center; }
   .register-button {
-    grid-column: 1 / -1;
     width: 100%;
   }
 
