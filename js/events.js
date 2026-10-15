@@ -54,7 +54,7 @@ function setRegistrationOpen(card, open) {
   button.textContent = open ? "Close registration" : "Register";
 }
 
-function selectRegion(card, talk, region) {
+function selectRegion(card, talk, region, scrollToCard = false) {
   if (card.dataset.region !== region.id) {
     const iframe = document.createElement("iframe");
     iframe.className = "google-form-frame";
@@ -68,8 +68,9 @@ function selectRegion(card, talk, region) {
   });
   card.querySelector(".registration-title").textContent = `Register — ${region.name}`;
   setRegistrationOpen(card, true);
-  // Reveal the form immediately; waiting for Google's load can interrupt typing.
-  card.querySelector(".registration-panel").scrollIntoView({ block: "start" });
+  // Ad visitors start at the poster; manual selections jump to the form.
+  const scrollTarget = scrollToCard ? card : card.querySelector(".registration-panel");
+  scrollTarget.scrollIntoView({ block: "start" });
 }
 
 function validateTalks(data) {
@@ -115,7 +116,7 @@ async function renderEvents() {
     const talk = talks[index];
     const region = talk && talk["tz-regions"].find(item => item.id === regionId);
     if (region) {
-      selectRegion(cards[index], talk, region);
+      selectRegion(cards[index], talk, region, true);
     }
   } catch (error) {
     list.textContent = "Talks could not be loaded. ";
