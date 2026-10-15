@@ -68,6 +68,8 @@ function selectRegion(card, talk, region) {
   });
   card.querySelector(".registration-title").textContent = `Register — ${region.name}`;
   setRegistrationOpen(card, true);
+  // Reveal the form immediately; waiting for Google's load can interrupt typing.
+  card.querySelector(".registration-panel").scrollIntoView({ block: "start" });
 }
 
 function validateTalks(data) {
@@ -114,7 +116,6 @@ async function renderEvents() {
     const region = talk && talk["tz-regions"].find(item => item.id === regionId);
     if (region) {
       selectRegion(cards[index], talk, region);
-      cards[index].scrollIntoView({ block: "start" });
     }
   } catch (error) {
     list.textContent = "Talks could not be loaded. ";
